@@ -12,12 +12,22 @@ class Technician extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
+    protected $guard = 'technician';
+
     /**
      * The attributes that are mass assignable.
      *
      * @var list<string>
      */
-    protected $fillable = [];
+    protected $fillable = [
+        'name',
+        'username',
+        'identification',
+        'email',
+        'celphone',
+        'password',
+        'state',
+    ];
 
     /**
      * The attributes that should be hidden for serialization.
