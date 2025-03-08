@@ -1,4 +1,4 @@
-@extends('back.layout.auth-layout')
+@extends('admin.back.layout.auth-layout')
 @section('pageTitle', isset($pageTitle) ? $pageTitle : 'Redeno')
 @section('content')
 {{-- <div class="login-box bg-white box-shadow border-radius-10">

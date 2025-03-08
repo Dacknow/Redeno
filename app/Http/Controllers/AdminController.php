@@ -8,6 +8,13 @@ use App\Http\Requests\UpdateAdminRequest;
 
 class AdminController extends Controller
 {
+
+    public function adminDashboard(){
+        $data = [
+            'pageTitle' => 'Dashboard'
+        ];
+        return view('admin.back.pages.dashboard', $data);
+    }
     /**
      * Display a listing of the resource.
      */

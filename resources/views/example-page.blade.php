@@ -1,4 +1,4 @@
-@extends('back.layout.pages-layout')
+@extends('admin.back.layout.pages-layout')
 @section('pageTitle', isset($pageTitle) ? $pageTitle : 'Redeno')
 @section('content')
 content here...

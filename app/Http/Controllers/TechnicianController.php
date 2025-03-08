@@ -8,6 +8,12 @@ use App\Http\Requests\UpdateTechnicianRequest;
 
 class TechnicianController extends Controller
 {
+    public function technicianDashboard(){
+        $data = [
+            'pageTitle' => 'Dashboard'
+        ];
+        return view('technician.back.pages.dashboard', $data);
+    }
     /**
      * Display a listing of the resource.
      */
