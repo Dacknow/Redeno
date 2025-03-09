@@ -10,13 +10,14 @@ Route::get('/', function () {
 
 Route::middleware(['guest:technician'])->group(function(){
     Route::controller(AuthController::class)->group(function () {
-        Route::get('/login', 'loginFormTechnician')->name('t.login');
-        Route::get('/forgot_password', 'forgotFormTechnician')->name('t.forgot');
+        Route::get('/login', 'loginFormTechnician')->name('tLogin');
+        Route::post('/login_handler', 'loginHandlerTechnician')->name('tLogin_handler');
+        Route::get('/forgot_password', 'forgotFormTechnician')->name('tForgot');
     });
 });
 
-Route::middleware(['auth:tecnician'])->group(function(){
+Route::middleware(['auth:technician'])->group(function(){
     Route::controller(TechnicianController::class)->group(function(){
-        Route::get('/dashboard', 'TechnicianDashboard')->name('t.dashboard');
+        Route::get('/dashboard', 'TechnicianDashboard')->name('tDashboard');
     });
 });

@@ -20,6 +20,6 @@ Route::middleware(['guest:admin'])->group(function () {
 // Rutas para usuarios autenticados (auth)
 Route::middleware(['auth:admin'])->group(function () {
     Route::controller(AdminController::class)->group(function () {
-        Route::get('/dashboard', 'AdminDashboard')->name('admin.dashboard');
+        Route::get('/dashboard', 'AdminDashboard')->name('dashboard');
     });
 });

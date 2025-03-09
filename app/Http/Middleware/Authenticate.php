@@ -2,12 +2,17 @@
 
 namespace App\Http\Middleware;
 
-use Illuminate\Auth\Middleware\Authenticate as Middleware;
+use Closure;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
-class Authenticate extends Middleware
-{
-    protected function redirecTo(Request $request): ?string
+class Authenticate
+{    /**
+     * Handle an incoming request.
+     *
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     */
+    public function handle(Request $request, Closure $next): Response
     {
         if (!$request->expectsJson()) {
             if($request->routeIs('admin.*')){
@@ -16,11 +21,12 @@ class Authenticate extends Middleware
             }
 
             if($request->routeIs('technician.*')){
+                dd('entro');
                 session()->flash('fail', 'you must login first');
-               return redirect()->route('t.login'); 
+               return redirect()->route('tLogin'); 
             }
             
         }
-        return null;
+        return $next($request);
     }
 }
