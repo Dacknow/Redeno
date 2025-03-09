@@ -8,15 +8,18 @@ Route::get('/', function () {
 });
 
 
-Route::middleware([])->group(function(){
+// Rutas para usuarios no autenticados (guest)
+Route::middleware(['guest:admin'])->group(function () {
     Route::controller(AuthController::class)->group(function () {
         Route::get('/login', 'loginForm')->name('login');
-        Route::get('/forgot-password', 'forgotForm')->name('forgot');
+        Route::post('/login_handler', 'loginHandler')->name('admin.login_handler');
+        Route::get('/forgot_password', 'forgotForm')->name('admin.forgot');
     });
 });
 
-Route::middleware([])->group(function(){
-    Route::controller(AdminController::class)->group(function(){
-        Route::get('/dashboard', 'AdminDashboard')->name('dashboard');
+// Rutas para usuarios autenticados (auth)
+Route::middleware(['auth:admin'])->group(function () {
+    Route::controller(AdminController::class)->group(function () {
+        Route::get('/dashboard', 'AdminDashboard')->name('admin.dashboard');
     });
 });

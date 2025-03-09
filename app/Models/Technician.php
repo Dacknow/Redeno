@@ -12,7 +12,7 @@ class Technician extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    protected $guard = 'technician';
+    protected $guard = "technician";
 
     /**
      * The attributes that are mass assignable.

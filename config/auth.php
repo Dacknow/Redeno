@@ -51,19 +51,17 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-    ],
-    'admin' => [
-        'web' => [
+
+        'admin' => [
             'driver' => 'session',
             'provider' => 'admins',
         ],
-    ],
-    'technician' => [
-        'web' => [
+        'technician' => [
             'driver' => 'session',
             'provider' => 'technicians',
         ],
     ],
+    
 
 
     /*

@@ -8,15 +8,15 @@ Route::get('/', function () {
     return 'hello technician';
 });
 
-Route::middleware([])->group(function(){
+Route::middleware(['guest:technician'])->group(function(){
     Route::controller(AuthController::class)->group(function () {
-        Route::get('/login', 'loginFormTechnician')->name('loginT');
-        Route::get('/forgot-password', 'forgotFormTechnician')->name('forgotT');
+        Route::get('/login', 'loginFormTechnician')->name('t.login');
+        Route::get('/forgot_password', 'forgotFormTechnician')->name('t.forgot');
     });
 });
 
-Route::middleware([])->group(function(){
+Route::middleware(['auth:tecnician'])->group(function(){
     Route::controller(TechnicianController::class)->group(function(){
-        Route::get('/dashboard', 'TechnicianDashboard')->name('dashboardT');
+        Route::get('/dashboard', 'TechnicianDashboard')->name('t.dashboard');
     });
 });
