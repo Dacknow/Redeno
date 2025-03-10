@@ -241,10 +241,13 @@
 							<a class="dropdown-item" href="faq.html"
 								><i class="dw dw-help"></i> Help</a
 							>
-							<a class="dropdown-item" href="login.html"
-								><i class="dw dw-logout"></i> Log Out</a
-							>
-						</div>
+							<a class="dropdown-item" href="{{route('logout_handler')}}"
+							onclick="event.preventDefault(); document.getElementById('adminLogoutForm').
+							submit();"><i class="dw dw-logout"></i> Log Out</a>
+							<form id="adminLogoutForm" action="{{route('logout_handler')}}" method="POST">
+								@csrf 
+							</form>
+                        </div>
 					</div>
 				</div>
 				<div class="github-link">

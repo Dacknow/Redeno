@@ -5,16 +5,35 @@ namespace App\Http\Controllers;
 use App\Models\Admin;
 use App\Http\Requests\StoreAdminRequest;
 use App\Http\Requests\UpdateAdminRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
 
-    public function adminDashboard(){
+    public function dashboard(){
         $data = [
             'pageTitle' => 'Dashboard'
         ];
         return view('admin.back.pages.dashboard', $data);
     }
+
+    
+    public function logoutHandler(Request $request)
+{
+    Auth::guard('admin')->logout(); // Cierra la sesión del guard 'admin'
+    $request->session()->invalidate(); // Invalida la sesión
+    $request->session()->regenerateToken(); // Regenera el token CSRF
+
+    if (!Auth::guard('admin')->check()) {
+        session()->flash('success', 'You are logged out !!!');
+    } else {
+        session()->flash('fail', 'Logout failed. Try again.');
+    }
+
+    return redirect()->route('login');
+}
+
     /**
      * Display a listing of the resource.
      */

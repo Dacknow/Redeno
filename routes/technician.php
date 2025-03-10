@@ -8,7 +8,7 @@ Route::get('/', function () {
     return 'hello technician';
 });
 
-Route::middleware(['guest:technician'])->group(function(){
+Route::middleware(['guest'])->group(function(){
     Route::controller(AuthController::class)->group(function () {
         Route::get('/login', 'loginFormTechnician')->name('tLogin');
         Route::post('/login_handler', 'loginHandlerTechnician')->name('tLogin_handler');
@@ -16,8 +16,9 @@ Route::middleware(['guest:technician'])->group(function(){
     });
 });
 
-Route::middleware(['auth:technician'])->group(function(){
+Route::middleware(['auth'])->group(function(){
     Route::controller(TechnicianController::class)->group(function(){
-        Route::get('/dashboard', 'TechnicianDashboard')->name('tDashboard');
+        Route::get('/home', 'home')->name('home');
+        Route::post('/logout_handler', 'logoutHandler')->name('tLogout_handler');
     });
 });

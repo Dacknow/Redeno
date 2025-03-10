@@ -13,21 +13,21 @@ class RedirectIfAuthenticated
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next, ...$guards): Response
+    public function handle(Request $request, Closure $next): Response
     {
-        
-        $guards = empty($guards) ? [null] : $guards;
-        foreach ($guards as $guard) {
-            if (Auth::guard($guard)->check()) {
-                if ($guard === 'admin') {
-                    return redirect()->route('dashboard');
-                }
-                if ($guard === 'technician') {
-                    return redirect()->route('tDashboard');
+        if(!$request->expectsJson()) {
+            if(str_starts_with(request()->route()->getPrefix(), 'admin')){
+                if(Auth::guard('admin')->check()){;
+                    return redirect()->route('dashboard'); 
+                }                    
+            }
+
+            if(str_starts_with(request()->route()->getPrefix(), 'technician')){                
+                if(Auth::guard('technician')->check()){
+                    return redirect()->route('home'); 
                 }
             }
         }
-
         return $next($request);
     }
 }

@@ -5,7 +5,7 @@
     <div class="login-title">
         <h2 class="text-center text-primary">Admin Login</h2>
     </div>
-    <form action="{{route('admin.login_handler')}}" method="POST">
+    <form action="{{route('login_handler')}}" method="POST">
 
         <x-form-alerts></x-form-alerts>
         @csrf

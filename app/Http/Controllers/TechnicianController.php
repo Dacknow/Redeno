@@ -5,15 +5,33 @@ namespace App\Http\Controllers;
 use App\Models\Technician;
 use App\Http\Requests\StoreTechnicianRequest;
 use App\Http\Requests\UpdateTechnicianRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TechnicianController extends Controller
 {
-    public function technicianDashboard(){
+    public function home(){
         $data = [
-            'pageTitle' => 'Dashboard'
+            'pageTitle' => 'Home'
         ];
-        return view('technician.back.pages.dashboard', $data);
+        return view('technician.back.pages.home', $data);
     }
+
+    public function LogoutHandler(Request $request)
+    {
+        Auth::guard('technician')->logout(); // Cierra la sesión del guard 'admin'
+        $request->session()->invalidate(); // Invalida la sesión
+        $request->session()->regenerateToken(); // Regenera el token CSRF
+
+        if (!Auth::guard('technician')->check()) {
+            session()->flash('success', 'You are logged out !!!');
+        } else {
+            session()->flash('fail', 'Logout failed. Try again.');
+        }
+
+        return redirect()->route('tLogin');
+    }
+
     /**
      * Display a listing of the resource.
      */

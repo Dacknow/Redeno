@@ -64,11 +64,12 @@ class AuthController extends Controller
             'password'=>$request->password
         );
 
-        if(Auth::guard('admin')-> attempt($creds) ){
-            return redirect()-> route('admin.dashboard');
+        if(Auth::guard('admin')->attempt($creds) ){
+            return redirect()-> route('dashboard');
+            
         }else{
             session()->flash('fail','Incorrect Credentials');
-            return redirect()-> route('admin.login');
+            return redirect()-> route('login');
         }
     }
 
@@ -102,8 +103,8 @@ class AuthController extends Controller
             'password'=>$request->password
         );
 
-        if(Auth::guard('technician')-> attempt($creds) ){
-            return redirect()-> route('tDashboard');
+        if(Auth::guard('technician')->attempt($creds) ){
+            return redirect()-> route('home');
         }else{
             session()->flash('fail','Incorrect Credentials ');
             return redirect()-> route('tLogin');
