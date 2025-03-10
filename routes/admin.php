@@ -9,7 +9,7 @@ Route::get('/', function () {
 
 
 // Rutas para usuarios no autenticados (guest)
-Route::middleware('guest')->group(function () {
+Route::middleware('guest', 'preventBackHistory')->group(function () {
     Route::controller(AuthController::class)->group(function () {
         Route::get('/login', 'loginForm')->name('login');
         Route::post('/login_handler', 'loginHandler')->name('login_handler');
@@ -18,7 +18,7 @@ Route::middleware('guest')->group(function () {
 });
 
 // Rutas para usuarios autenticados (auth)
-Route::middleware('auth')->group(function () {
+Route::middleware('auth', 'preventBackHistory')->group(function () {
     Route::controller(AdminController::class)->group(function () {
         Route::get('/dashboard', 'dashboard')->name('dashboard');
         Route::post('/logout_handler', 'logoutHandler')->name('logout_handler');

@@ -8,7 +8,7 @@ Route::get('/', function () {
     return 'hello technician';
 });
 
-Route::middleware(['guest'])->group(function(){
+Route::middleware(['guest', 'preventBackHistory'])->group(function(){
     Route::controller(AuthController::class)->group(function () {
         Route::get('/login', 'loginFormTechnician')->name('tLogin');
         Route::post('/login_handler', 'loginHandlerTechnician')->name('tLogin_handler');
@@ -16,7 +16,7 @@ Route::middleware(['guest'])->group(function(){
     });
 });
 
-Route::middleware(['auth'])->group(function(){
+Route::middleware(['auth', 'preventBackHistory'])->group(function(){
     Route::controller(TechnicianController::class)->group(function(){
         Route::get('/home', 'home')->name('home');
         Route::post('/logout_handler', 'logoutHandler')->name('tLogout_handler');
