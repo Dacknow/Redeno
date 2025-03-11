@@ -1,0 +1,42 @@
+@extends('admin.back.layout.auth-layout')
+@section('pageTitle', isset($pageTitle) ? $pageTitle : 'Reset Password')
+@section('content')
+<div class="login-box bg-white box-shadow border-radius-10">
+    <div class="login-title">
+        <h2 class="text-center text-primary">Reset Password</h2>
+    </div>
+    <h6 class="mb-20">Enter your new password and confirm new password</h6>
+    <form action="{{ route('reset-password-handler', ['token'=>request()->token]) }}" method="POST">
+        @csrf
+
+        <x-form-alerts></x-form-alerts>
+        <div class="input-group custom">
+            <input type="password" class="form-control form-control-lg" placeholder="New Password"
+            name="new_password" value="{{ old('new_password')}}">
+            <div class="input-group-append custom">
+                <span class="input-group-text"><i class="dw dw-padlock1"></i></span>
+            </div>
+        </div>
+        @error('new_password')
+            <div class="d-block text-danger" styles="margin-top:-25px; margin-boton:25px">{{$message}}</div>            
+        @enderror
+        <div class="input-group custom">
+            <input type="password" class="form-control form-control-lg" placeholder="Confirm New Contraseña"
+            name="new_password_confirmation" value="{{ old('new_password_confirmation')}}">
+            <div class="input-group-append custom">
+                <span class="input-group-text"><i class="dw dw-padlock1"></i></span>
+            </div>
+        </div>
+        @error('new_password_confirmation')
+            <div class="d-block text-danger" styles="margin-top:-25px; margin-boton:25px">{{$message}}</div>            
+        @enderror
+        <div class="row align-items-center">
+            <div class="col-5">
+                <div class="input-group mb-0">
+                    <input class="btn btn-primary btn-lg btn-block" type="submit" value="Send">
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+@endsection

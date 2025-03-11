@@ -12,8 +12,15 @@ Route::get('/', function () {
 Route::middleware('guest', 'preventBackHistory')->group(function () {
     Route::controller(AuthController::class)->group(function () {
         Route::get('/login', 'loginForm')->name('login');
-        Route::post('/login_handler', 'loginHandler')->name('login_handler');
-        Route::get('/forgot_password', 'forgotForm')->name('forgot');
+        Route::post('/login-handler', 'loginHandler')->name('login-handler');
+        Route::get('/forgot-password', 'forgotForm')->name('forgot-password');
+    });
+
+    Route::controller(AdminController::class)->group(function (){
+        Route::post('/send-password-reset-link', 'sendPasswordResetLink')->name('send-password-reset-link');
+        Route::get('/password/reset/{token}', 'resetPassword')->name('reset-password');
+        Route::post('/reset-password-handler', 'resetPasswordHandler')->name('reset-password-handler');
+        
     });
 });
 
@@ -21,6 +28,6 @@ Route::middleware('guest', 'preventBackHistory')->group(function () {
 Route::middleware('auth', 'preventBackHistory')->group(function () {
     Route::controller(AdminController::class)->group(function () {
         Route::get('/dashboard', 'dashboard')->name('dashboard');
-        Route::post('/logout_handler', 'logoutHandler')->name('logout_handler');
+        Route::post('/logout-handler', 'logoutHandler')->name('logout-handler');
     });
 });

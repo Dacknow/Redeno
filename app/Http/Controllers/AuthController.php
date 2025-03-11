@@ -18,7 +18,7 @@ class AuthController extends Controller
         $data = [
             'pageTitle' => 'Forgot Password'
         ];
-        return view('admin.back.pages.auth.forgot', $data);
+        return view('admin.back.pages.auth.forgot-password', $data);
     }
     public function loginFormTechnician(Request $request){
         $data = [
