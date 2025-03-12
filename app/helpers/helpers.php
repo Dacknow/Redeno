@@ -19,7 +19,7 @@ if(!function_exists('sendEmail')){
         $mail->Username = env('EMAIL_USERNAME');
         $mail->Password = env('EMAIL_PASSWORD');
         $mail->Port = env('EMAIL_PORT');
-        $mail->SMTPSecure = env('EMAIL_ENCRYPTION');
+        //$mail->SMTPSecure = env('EMAIL_ENCRYPTION');
         $mail->setFrom($mailConfig['mail_from_email'], $mailConfig['mail_from_name']);
         $mail->addAddress($mailConfig['mail_recipient_email'], $mailConfig['mail_recipient_name']);
         $mail->isHTML(true);

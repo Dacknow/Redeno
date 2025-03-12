@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\File;
 
+
 class AdminController extends Controller
 {
 
@@ -111,6 +112,35 @@ class AdminController extends Controller
 
     }
 
+    public function resetPassword(Request $request, $token = null){
+            
+        
+        $check_token= DB::table('password_reset_tokens')
+                        ->where(['token'=>$token, 'guard'=>constGuards::ADMIN])
+                        ->first();
+
+        if($check_token){
+            // verificar si no esta expirado el token
+
+            $diffMins=Carbon::createFromFormat('Y-m-d H:i:s', $check_token->created_at)->diffInMinutes(Carbon::now());
+        
+            if ($diffMins > constDefaults::tokenExpiredMinutes) {
+                # si expiró
+                session()->flash('fail', 'El tiempo Expiró!, intenta de nuevo');
+                return redirect()->route('forgot-password', ['token'=>$token]);
+        
+
+            } else {
+                return view('admin.back.pages.auth.reset-password', ['token'=>$token]);
+        
+            }
+            
+        }else{
+            session()->flash('fail', 'Token Inválido!, intenta de nuevo');
+            return redirect()->route('forgot-password', ['token'=>$token]);
+        }
+    }
+
     public function resetPasswordHandler(Request $request){
         $request->validate([
             'new_password'=>'required|min:5|max:45|required_with:new_password_confirmation|
@@ -163,34 +193,7 @@ class AdminController extends Controller
         return redirect()->route('login')->with('success','Listo!, Tu contraseña ha sido reestablecida');
     }
 
-    public function resetPassword(Request $request, $token = null){
-            
-        
-        $check_token= DB::table('password_reset_tokens')
-                        ->where(['token'=>$token, 'guard'=>constGuards::ADMIN])
-                        ->first();
-
-        if($check_token){
-            // verificar si no esta expirado el token
-
-            $diffMins=Carbon::createFromFormat('Y-m-d H:i:s', $check_token->created_at)->diffInMinutes(Carbon::now());
-        
-            if ($diffMins > constDefaults::tokenExpiredMinutes) {
-                # si expiró
-                session()->flash('fail', 'El tiempo Expiró!, intenta de nuevo');
-                return redirect()->route('forgot-password', ['token'=>$token]);
-        
-
-            } else {
-                return view('admin.back.pages.auth.reset-password', ['token'=>$token]);
-        
-            }
-            
-        }else{
-            session()->flash('fail', 'Token Inválido!, intenta de nuevo');
-            return redirect()->route('forgot-password', ['token'=>$token]);
-        }
-    }
+    
 
     /**
      * Display a listing of the resource.

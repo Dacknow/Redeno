@@ -11,14 +11,20 @@ Route::get('/', function () {
 Route::middleware(['guest', 'preventBackHistory'])->group(function(){
     Route::controller(AuthController::class)->group(function () {
         Route::get('/login', 'loginFormTechnician')->name('tLogin');
-        Route::post('/login_handler', 'loginHandlerTechnician')->name('tLogin_handler');
-        Route::get('/forgot_password', 'forgotFormTechnician')->name('tForgot');
+        Route::post('/login-handler', 'loginHandlerTechnician')->name('tLogin-handler');
+        Route::get('/forgot-password', 'forgotFormTechnician')->name('tForgot-password');
+    });
+
+    Route::controller(TechnicianController::class)->group(function (){
+        Route::post('/send-password-reset-link', 'sendPasswordResetLink')->name('tSend-password-reset-link');
+        Route::get('/password/reset/{token}', 'resetPassword')->name('tReset-password');
+        Route::post('/reset-password-handler', 'resetPasswordHandler')->name('tReset-password-handler');
     });
 });
 
 Route::middleware(['auth', 'preventBackHistory'])->group(function(){
     Route::controller(TechnicianController::class)->group(function(){
         Route::get('/home', 'home')->name('home');
-        Route::post('/logout_handler', 'logoutHandler')->name('tLogout_handler');
+        Route::post('/logout-handler', 'logoutHandler')->name('tLogout-handler');
     });
 });

@@ -241,10 +241,10 @@
 							<a class="dropdown-item" href="faq.html"
 								><i class="dw dw-help"></i> Help</a
 							>
-							<a class="dropdown-item" href="{{route('tLogout_handler')}}"
+							<a class="dropdown-item" href="{{route('tLogout-handler')}}"
 							onclick="event.preventDefault(); document.getElementById('technicianLogoutForm').
 							submit();"><i class="dw dw-logout"></i> Log Out</a>
-							<form id="technicianLogoutForm" action="{{route('tLogout_handler')}}" method="POST">
+							<form id="technicianLogoutForm" action="{{route('tLogout-handler')}}" method="POST">
 								@csrf 
 							</form>
 						</div>

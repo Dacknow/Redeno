@@ -3,10 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Technician;
-use App\Http\Requests\StoreTechnicianRequest;
-use App\Http\Requests\UpdateTechnicianRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use constGuards;
+use constDefaults;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\File;
 
 class TechnicianController extends Controller
 {
@@ -19,7 +24,7 @@ class TechnicianController extends Controller
 
     public function LogoutHandler(Request $request)
     {
-        Auth::guard('technician')->logout(); // Cierra la sesión del guard 'admin'
+        Auth::guard('technician')->logout(); // Cierra la sesión del guard 'technician'
         $request->session()->invalidate(); // Invalida la sesión
         $request->session()->regenerateToken(); // Regenera el token CSRF
 
@@ -30,6 +35,158 @@ class TechnicianController extends Controller
         }
 
         return redirect()->route('tLogin');
+    }
+
+    public function sendPasswordResetLink(Request $request){
+        $request->validate([
+            'email'=>'required|email|exists:technicians,email'
+        ],[    
+            'email.required'=>'Email address required',
+            'email.email'=>'Invalid email address',
+            'email.exists'=>'Email address is not exists in system'
+        ]);
+
+        // traer detalles del technician
+
+        $technician = Technician::where('email',$request->email)->first();
+
+        // generar token
+
+        $token = base64_encode(Str::random(64));
+
+        // verificar si existe un token 
+
+        $oldToken = DB::table('password_reset_tokens')
+                        ->where(['email'=>$request->email,'guard'=>constGuards::TECHNICIAN])
+                        -> first();
+
+        if($oldToken){
+            //actualizar token
+            DB::table('password_reset_tokens')
+            ->where(['email'=>$request->email,'guard'=>constGuards::TECHNICIAN])
+            -> update([
+                'token'=>$token,
+                'created_at'=>Carbon::now()
+            ]);
+        }else{
+            // añadir un nuevo token
+
+            DB::table('password_reset_tokens')->insert([
+                'email'=>$request->email,
+                'guard'=>constGuards::TECHNICIAN,
+                'token'=>$token,
+                'created_at'=>Carbon::now()
+            ]);
+        }
+
+        $actionLink = route('tReset-password', ['token'=>$token, 'email'=>$request->email]);
+
+        $data = array(
+            'actionLink'=> $actionLink,
+            'technician'=>$technician
+        );
+
+        $mail_body = view('email-templates.technician-forgot-email-template', $data)->render();
+
+        $mailConfig= array(
+            'mail_from_email'=>env('EMAIL_FROM_ADDRESS'),
+            'mail_from_name'=>env('EMAIL_FROM_NAME'),
+            'mail_recipient_email'=> $technician->email,
+            'mail_recipient_name'=> $technician->name,
+            'mail_subject'=>'Reset password',
+            'mail_body'=>$mail_body
+
+        );
+
+        if(sendEmail($mailConfig)){
+            session()->flash('success', 'Te enviamos un correo');
+            return redirect()->route('tForgot-password');
+        }else{
+            session()->flash('fail', 'Algo salió mal!');
+            return redirect()->route('tForgot-password');
+        }
+
+    }
+
+    public function resetPassword(Request $request, $token = null){
+            
+        
+        $check_token= DB::table('password_reset_tokens')
+                        ->where(['token'=>$token, 'guard'=>constGuards::TECHNICIAN])
+                        ->first();
+
+        if($check_token){
+            // verificar si no esta expirado el token
+
+            $diffMins=Carbon::createFromFormat('Y-m-d H:i:s', $check_token->created_at)->diffInMinutes(Carbon::now());
+        
+            if ($diffMins > constDefaults::tokenExpiredMinutes) {
+                # si expiró
+                session()->flash('fail', 'El tiempo Expiró!, intenta de nuevo');
+                return redirect()->route('tForgot-password', ['token'=>$token]);
+        
+
+            } else {
+                return view('technician.back.pages.auth.reset-password', ['token'=>$token]);
+        
+            }
+            
+        }else{
+            session()->flash('fail', 'Token Inválido!, intenta de nuevo');
+            return redirect()->route('tForgot-password', ['token'=>$token]);
+        }
+    }
+
+    public function resetPasswordHandler(Request $request){
+        $request->validate([
+            'new_password'=>'required|min:5|max:45|required_with:new_password_confirmation|
+            same:new_password_confirmation',
+            'new_password_confirmation'=>'required'
+        ],[
+            'new_password.required'=>'Se requiere que escriba una nueva contraseña',
+            'new_password.min'=>'La nueva contraseña es demasiado corta',
+            'new_password.max'=>'La nueva contraseña es demasiado larga',
+            'new_password.same'=>'Las contraseñas no coinciden',
+            'new_password_confirmation.required'=>'Se requiere la confirmación de la nueva contraseña'
+        ]);
+
+        $token = DB::table('password_reset_tokens')
+                    ->where(['token'=>$request->token, 'guard'=>constGuards::TECHNICIAN])
+                    ->first();
+        
+        //traer datos del usuario technician
+        $technician = Technician::where('email', $token->email)->first();
+
+        //actualizar contraseña del usuario technician
+        Technician::where('email', $technician->email)->update([
+            'password'=>Hash::make($request->new_password)
+        ]);
+        // borrar token
+        DB::table('password_reset_tokens')->where([
+            'email'=>$technician->email,
+            'token'=>$request->token,
+            'guard'=>constGuards::TECHNICIAN
+        ])->delete();
+
+        //enviar correo de notificacion al usuario
+        $data = array(
+            'technician'=>$technician,
+            'new_password'=>$request->new_password
+        );
+
+        $mail_body = view('email-templates.technician-reset-email-template', $data)->render();
+
+        $mailConfig = array(
+            'mail_from_email'=>env('EMAIL_FROM_ADDRESS'),
+            'mail_from_name'=>env('EMAIL_FROM_NAME'),
+            'mail_recipient_email'=>$technician->email,
+            'mail_recipient_name'=>$technician->name,
+            'mail_subject'=>'Contraseña Reestablecida',
+            'mail_body'=> $mail_body
+        );
+        
+        sendEmail($mailConfig);
+        return redirect()->route('tLogin')->with('success','Listo!, Tu contraseña ha sido reestablecida');
     }
 
     /**
@@ -51,7 +208,7 @@ class TechnicianController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreTechnicianRequest $request)
+    public function store(Request $request)
     {
         //
     }
@@ -75,7 +232,7 @@ class TechnicianController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateTechnicianRequest $request, Technician $technician)
+    public function update(Request $request, Technician $technician)
     {
         //
     }
