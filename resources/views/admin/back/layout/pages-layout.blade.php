@@ -233,17 +233,17 @@
 							class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list"
 						>
 							<a class="dropdown-item" href="profile.html"
-								><i class="dw dw-user1"></i> Profile</a
+								><i class="dw dw-user1"></i> Perfil</a
 							>
 							<a class="dropdown-item" href="profile.html"
-								><i class="dw dw-settings2"></i> Setting</a
+								><i class="dw dw-settings2"></i> Ajustes</a
 							>
 							<a class="dropdown-item" href="faq.html"
-								><i class="dw dw-help"></i> Help</a
+								><i class="dw dw-help"></i> Ayuda</a
 							>
 							<a class="dropdown-item" href="{{route('logout-handler')}}"
 							onclick="event.preventDefault(); document.getElementById('adminLogoutForm').
-							submit();"><i class="dw dw-logout"></i> Log Out</a>
+							submit();"><i class="dw dw-logout"></i> Cerrar Sesión</a>
 							<form id="adminLogoutForm" action="{{route('logout-handler')}}" method="POST">
 								@csrf 
 							</form>

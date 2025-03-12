@@ -9,27 +9,27 @@ class AuthController extends Controller
 {
     public function loginForm(Request $request){
         $data = [
-            'pageTitle' => 'Login'
+            'pageTitle' => 'Iniciar Sesión'
         ];
         return view('admin.back.pages.auth.login', $data);
     }
 
     public function forgotForm(Request $request){
         $data = [
-            'pageTitle' => 'Forgot Password'
+            'pageTitle' => 'Recuperar Contraseña'
         ];
         return view('admin.back.pages.auth.forgot-password', $data);
     }
     public function loginFormTechnician(Request $request){
         $data = [
-            'pageTitle' => 'Login'
+            'pageTitle' => 'Iniciar Sesión'
         ];
         return view('technician.back.pages.auth.login', $data);
     }
 
     public function forgotFormTechnician(Request $request){
         $data = [
-            'pageTitle' => 'Forgot Password'
+            'pageTitle' => 'Recuperar Contraseña'
         ];
         return view('technician.back.pages.auth.forgot-password', $data);
     }
@@ -42,10 +42,10 @@ class AuthController extends Controller
                 'login_id'=>'required|email|exists:admins,email',
                 'password'=>'required|min:5|max:45'
             ],[
-                'login_id.required'=>'username or email is required',
-                'login_id.email'=>'invalid email address',
-                'login_id.exists'=>'email is not exists in system',
-                'password.required'=>'password is required'
+                'login_id.required' => 'Se requiere nombre de usuario o correo electrónico',
+                'login_id.email' => 'Dirección de correo electrónico no válida',
+                'login_id.exists' => 'El correo electrónico no existe en el sistema',
+                'password.required' => 'Se requiere contraseña'
             ]);
         }else{
             $request->validate([

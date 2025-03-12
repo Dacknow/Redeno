@@ -1,5 +1,5 @@
 @extends('technician.back.layout.auth-layout')
-@section('pageTitle', isset($pageTitle) ? $pageTitle : 'Reset Password')
+@section('pageTitle', isset($pageTitle) ? $pageTitle : 'Reestablecer Contraseña')
 @section('content')
 <div class="login-box bg-white box-shadow border-radius-10">
     <div class="login-title">
@@ -11,7 +11,7 @@
 
         <x-form-alerts></x-form-alerts>
         <div class="input-group custom">
-            <input type="password" class="form-control form-control-lg" placeholder="New Password"
+            <input type="password" class="form-control form-control-lg" placeholder="Nueva Contraseña"
             name="new_password" value="{{ old('new_password')}}">
             <div class="input-group-append custom">
                 <span class="input-group-text"><i class="dw dw-padlock1"></i></span>
@@ -21,7 +21,7 @@
             <div class="d-block text-danger" styles="margin-top:-25px; margin-boton:25px">{{$message}}</div>            
         @enderror
         <div class="input-group custom">
-            <input type="password" class="form-control form-control-lg" placeholder="Confirm New Contraseña"
+            <input type="password" class="form-control form-control-lg" placeholder="Confirme la Nueva Contraseña"
             name="new_password_confirmation" value="{{ old('new_password_confirmation')}}">
             <div class="input-group-append custom">
                 <span class="input-group-text"><i class="dw dw-padlock1"></i></span>
@@ -33,7 +33,7 @@
         <div class="row align-items-center">
             <div class="col-5">
                 <div class="input-group mb-0">
-                    <input class="btn btn-primary btn-lg btn-block" type="submit" value="Send">
+                    <input class="btn btn-primary btn-lg btn-block" type="submit" value="Enviar">
                 </div>
             </div>
         </div>

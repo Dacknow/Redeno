@@ -17,7 +17,7 @@ class TechnicianController extends Controller
 {
     public function home(){
         $data = [
-            'pageTitle' => 'Home'
+            'pageTitle' => 'Inicio'
         ];
         return view('technician.back.pages.home', $data);
     }
@@ -29,9 +29,9 @@ class TechnicianController extends Controller
         $request->session()->regenerateToken(); // Regenera el token CSRF
 
         if (!Auth::guard('technician')->check()) {
-            session()->flash('success', 'You are logged out !!!');
+            session()->flash('success', 'Cerraste Sesión !!!');
         } else {
-            session()->flash('fail', 'Logout failed. Try again.');
+            session()->flash('fail', 'Algo falló, intenta otra vez');
         }
 
         return redirect()->route('tLogin');
@@ -41,9 +41,9 @@ class TechnicianController extends Controller
         $request->validate([
             'email'=>'required|email|exists:technicians,email'
         ],[    
-            'email.required'=>'Email address required',
-            'email.email'=>'Invalid email address',
-            'email.exists'=>'Email address is not exists in system'
+            'email.required' => 'Dirección de correo electrónico obligatoria',
+            'email.email' => 'Dirección de correo electrónico no válida',
+            'email.exists' => 'La dirección de correo electrónico no existe en el sistema'
         ]);
 
         // traer detalles del technician

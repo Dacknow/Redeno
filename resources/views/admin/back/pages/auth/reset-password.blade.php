@@ -1,17 +1,17 @@
 @extends('admin.back.layout.auth-layout')
-@section('pageTitle', isset($pageTitle) ? $pageTitle : 'Reset Password')
+@section('pageTitle', isset($pageTitle) ? $pageTitle : 'Reestablecer Contraseña')
 @section('content')
 <div class="login-box bg-white box-shadow border-radius-10">
     <div class="login-title">
-        <h2 class="text-center text-primary">Reset Password</h2>
+        <h2 class="text-center text-primary">Reestablecer Contraseña</h2>
     </div>
-    <h6 class="mb-20">Enter your new password and confirm new password</h6>
+    <h6 class="mb-20">Ingrese su nueva contraseña y confírmela</h6>
     <form action="{{ route('reset-password-handler', ['token'=>request()->token]) }}" method="POST">
         @csrf
 
         <x-form-alerts></x-form-alerts>
         <div class="input-group custom">
-            <input type="password" class="form-control form-control-lg" placeholder="New Password"
+            <input type="password" class="form-control form-control-lg" placeholder="Nueva contraseña"
             name="new_password" value="{{ old('new_password')}}">
             <div class="input-group-append custom">
                 <span class="input-group-text"><i class="dw dw-padlock1"></i></span>
@@ -21,7 +21,7 @@
             <div class="d-block text-danger" styles="margin-top:-25px; margin-boton:25px">{{$message}}</div>            
         @enderror
         <div class="input-group custom">
-            <input type="password" class="form-control form-control-lg" placeholder="Confirm New Contraseña"
+            <input type="password" class="form-control form-control-lg" placeholder="Confirme la nueva contraseña"
             name="new_password_confirmation" value="{{ old('new_password_confirmation')}}">
             <div class="input-group-append custom">
                 <span class="input-group-text"><i class="dw dw-padlock1"></i></span>
@@ -33,7 +33,7 @@
         <div class="row align-items-center">
             <div class="col-5">
                 <div class="input-group mb-0">
-                    <input class="btn btn-primary btn-lg btn-block" type="submit" value="Send">
+                    <input class="btn btn-primary btn-lg btn-block" type="submit" value="Enviar">
                 </div>
             </div>
         </div>
