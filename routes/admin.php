@@ -29,5 +29,6 @@ Route::middleware('auth', 'preventBackHistory')->group(function () {
     Route::controller(AdminController::class)->group(function () {
         Route::get('/dashboard', 'dashboard')->name('dashboard');
         Route::post('/logout-handler', 'logoutHandler')->name('logout-handler');
+        Route::get('/profile', 'profileView')->name('profile');
     });
 });

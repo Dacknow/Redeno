@@ -61,4 +61,8 @@ class Admin extends Authenticatable
     {
         return $this->hasMany(Notification::class);
     }
+
+    public function getPictureAttribute($value){
+        return $value ? asset('images/users/admins/'.$value) : asset('images/users/default-profile.png');
+    }
 }

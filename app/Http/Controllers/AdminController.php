@@ -193,6 +193,12 @@ class AdminController extends Controller
         return redirect()->route('login')->with('success','Listo!, Tu contraseña ha sido reestablecida');
     }
 
+    public function profileView(){
+        $data = [
+            'pageTitle' => 'Perfil'
+        ];
+        return view('admin.back.pages.profile', $data);
+    }
     
 
     /**
