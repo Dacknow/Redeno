@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\File;
+use SawaStacks\Utils\Kropify;
 
 
 class AdminController extends Controller
@@ -198,6 +199,33 @@ class AdminController extends Controller
             'pageTitle' => 'Perfil'
         ];
         return view('admin.back.pages.profile', $data);
+    }
+    public function updateProfilePicture(Request $request){
+        
+        $admin = Admin::findOrFail(auth('admin')->id());
+        $path = '/images/users/admins/';
+        $file = $request->file('adminProfilePictureFile');
+        $old_picture = $admin->getAttributes()['picture'];
+        $filename = 'ADMIN_IMG_'.uniqid().'.png';
+
+        $upload = Kropify::getFile($file, $filename)->maxWoH(255)->save($path);
+        //$upload = $file->move(public_path($path), $filename);
+        
+        if($upload){
+            if($old_picture != null && File::exists(public_path($path.$old_picture))){
+                File::delete(public_path($path.$old_picture));
+            }
+            dd($upload);
+            $admin->update(['picture'=>$filename]);
+            
+            return response()->json(['status'=>1, 'msg'=>'Su foto fué cambiada con exito!.']);
+            
+
+        }else{
+            return response()->json(['status'=>0,'msg'=>'Algo salió mal!.']); 
+        }
+
+        
     }
     
 

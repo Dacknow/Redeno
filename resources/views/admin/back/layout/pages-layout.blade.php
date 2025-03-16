@@ -4,7 +4,7 @@
 		<!-- Basic Page Info -->
 		<meta charset="utf-8" />
 		<title>@yield('pageTitle')</title>
-
+		<meta name="csrf-token" content="{{ csrf_token() }}">
 		<!-- Site favicon -->
 		<link
 			rel="apple-touch-icon"
@@ -44,7 +44,7 @@
 		/>
 		<link rel="stylesheet" type="text/css" href="/back/vendors/styles/style.css" />
 		<link rel="stylesheet" type="text/css" href="/back/vendors/styles/myStyles.css" />
-		
+		@kropifyStyles
         @stack('stylesheet')
 	</head>
 	<body>
@@ -211,26 +211,26 @@
 				<div class="sidebar-menu">
 					<ul id="accordion-menu">
 						<li>
-							<a href="{{route('dashboard')}}" class="dropdown-toggle no-arrow">
-								<span class="micon bi bi-house-door"></span>
+							<a href="{{route('dashboard')}}" class="dropdown-toggle no-arrow {{Route::is('dashboard') ? 'active' : ''}}">
+								<span class="micon fa fa-home"></span>
 								<span class="mtext">Inicio</span>
 							</a>
 						</li>
 						<li>
 							<a href="reportes.html" class="dropdown-toggle no-arrow">
-								<span class="micon bi bi-exclamation-triangle"></span>
+								<span class="micon fa fa-warning"></span>
 								<span class="mtext">Reportes</span>
 							</a>
 						</li>
 						<li>
 							<a href="plantillas.html" class="dropdown-toggle no-arrow">
-								<span class="micon bi bi-file-earmark-code"></span>
+								<span class="micon fa fa-clone"></span>
 								<span class="mtext">Plantillas</span>
 							</a>
 						</li>
 						<li>
 							<a href="usuarios.html" class="dropdown-toggle no-arrow">
-								<span class="micon bi bi-people"></span>
+								<span class="micon fa fa-users"></span>
 								<span class="mtext">Usuarios</span>
 							</a>
 						</li>
@@ -244,7 +244,7 @@
 							<div class="dropdown-divider"></div>
 						</li>
 						<li>
-							<a href="{{route('profile')}}" class="dropdown-toggle no-arrow">
+							<a href="{{route('profile')}}" class="dropdown-toggle no-arrow {{Route::is('profile') ? 'active' : ''}}">
 								<span class="micon bi bi-person-circle"></span>
 								<span class="mtext">Perfil</span>
 							</a>
@@ -287,6 +287,7 @@
 		<script src="/back/vendors/scripts/script.min.js"></script>
 		<script src="/back/vendors/scripts/process.js"></script>
 		<script src="/back/vendors/scripts/layout-settings.js"></script>
+		@kropifyScripts
         @stack('scripts')
 	</body>
 </html>

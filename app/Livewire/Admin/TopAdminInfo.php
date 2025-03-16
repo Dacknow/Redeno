@@ -4,13 +4,14 @@ namespace App\Livewire\Admin;
 
 use Livewire\Component;
 use App\Models\Admin;
-use Livewire\Attributes\On;
 
 class TopAdminInfo extends Component
 {
     public $admin;
+    protected $listeners =[
+        'updateAdminHeaderInfo' => '$refresh'  
+    ];
 
-    #[On('updateAdminHeaderInfo')]
     public function mount(){
         $this->admin = Admin::findOrFail(auth('admin')->id());
     }

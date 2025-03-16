@@ -30,5 +30,6 @@ Route::middleware('auth', 'preventBackHistory')->group(function () {
         Route::get('/dashboard', 'dashboard')->name('dashboard');
         Route::post('/logout-handler', 'logoutHandler')->name('logout-handler');
         Route::get('/profile', 'profileView')->name('profile');
+        Route::post('/update-profile-picture', 'updateProfilePicture')->name('update_profile_picture');
     });
 });

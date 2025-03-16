@@ -1,16 +1,19 @@
-<div>
-    <x-form-alerts></x-form-alerts>
+<div>    
     <div class="row">
         <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 mb-30">
             <div class="pd-20 card-box height-100-p">
                 <div class="profile-photo">
-                    <a href="" class="edit-avatar"><i class="fa fa-pencil"></i></a>
-                    <img src="{{$admin->picture}}" alt="" class="avatar-photo">
+                    <a href="javascript:;" onclick="event.preventDefault();document.getElementById
+                    ('adminProfilePictureFile').click();" class="edit-avatar"><i class="fa fa-pencil" style="margin-top:7px;"></i></a>
+                    <img src="{{$admin->picture}}" alt="" class="avatar-photo" id="adminProfilePicturePreview">
+                    <input type="file" name="adminProfilePictureFile" id="adminProfilePictureFile" class="d-none"
+                    style="opacity:0">
                 </div>
                 <h5 id="adminProfileName" class="text-center h5 mb-0">{{$admin->name}}</h5>
                 <p id="adminProfileEmail" class="text-center text-muted font-14">
-                    {{$admin->email}}
+                    {{$email}}
                 </p>
+                {{-- Aqui va el rol del admin --}}
                 <p class="text-center text-muted font-14">
                     <strong>{{ $state ? 'Coordinador' : 'Inactivo' }}</strong>
                 </p>
@@ -109,8 +112,8 @@
                             </div>
                         </div>
                     </div>                
-                </div>
+                </div> 
             </div>
         </div>
-    </div>
+    </div> 
 </div>

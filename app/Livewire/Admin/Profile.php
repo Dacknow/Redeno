@@ -4,10 +4,7 @@ namespace App\Livewire\Admin;
 
 use Livewire\Component;
 use App\Models\Admin;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Hash;
-use Livewire\Attributes\On;
 
 class Profile extends Component
 {
@@ -16,19 +13,23 @@ class Profile extends Component
     public $tab = null;
     public $tabname = 'personal_details';
     protected $queryString = ['tab'=>['keep'=>true]];
-    public $name, $username, $email, $user_id, $state;
+    public $name, $username, $email, $admin_id, $state;
     public $current_password, $new_password, $new_password_confirmation;
+    protected $listeners = [
+        'updateAdminInfo' => '$refresh'
+    ];
 
     public function selectTab($tab){
         $this->tab = $tab;
     }
 
-    #[On('updateAdminInfo')]
+    // #[On('updateAdminInfo')]
 
     public function mount()
     {
         $this->tab = Request('tab') ? Request('tab') : $this->tabname;
         $this->admin = Admin::findOrFail(auth('admin')->id());
+        $this->admin_id = $this->admin->id;
         $this->name = $this->admin->name;
         $this->username = $this->admin->username;
         $this->email = $this->admin->email;
@@ -38,17 +39,17 @@ class Profile extends Component
 
     public function toggleAvailability()
     {
+        // Actualizar el estado de disponibilidad en la base de datos
+        $admin = Admin::findOrFail(auth('admin')->id());
         $this->is_available = $this->is_available ? 0 : 1; // Alternar entre 0 y 1
-        $this->admin->update(['is_available' => $this->is_available]);
-        $this->dispatch('updateAdminHeaderInfo', 
-            statusIndicator: $this->is_available,
-        );
+        $admin->update(['is_available' => $this->is_available]);
+        $this->dispatch('updateAdminHeaderInfo')->to(TopAdminInfo::class);
     }
 
     public function updatePersonalDetails(){
         $this->validate([
             'name'=>'required|min:2|max:44',
-            'username'=>'required|min:2|max:44|unique:admins,username,'.$this->admin->id,
+            'username'=>'required|min:2|max:44|unique:admins,username,'.$this->admin_id,
             'email'=>'required|email|max:149'                      
         ],[
             'name.required'=>'Se requiere que escriba un nombre',
@@ -71,15 +72,14 @@ class Profile extends Component
             ]);
 
             // Actualizar info admin
-            $this->dispatch('updateAdminInfo', 
-                adminName: $this->name,
-                adminEmail: $this->email
-            );
+            // $this->dispatch('updateAdminInfo', 
+            //     adminName: $this->name,
+            //     adminEmail: $this->email
+            // );
 
-            $this->dispatch('updateAdminHeaderInfo', 
-                adminUsername: $this->username,
-                statusIndicator: $this->is_available,
-            );
+            $this->dispatch('updateAdminInfo')->to(Profile::class);
+
+            $this->dispatch('updateAdminHeaderInfo')->to(TopAdminInfo::class);
     
 
             // $this->showToastr('success', 'Su información ha sido actualiza!.');
