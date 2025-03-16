@@ -49,8 +49,8 @@ input:checked + .slider:before {
 }
 
 .profile-img {
-    width: 50px; /* Ajusta el tamaño según lo necesites */
-    height: 50px;
+    width: 52px; /* Ajusta el tamaño según lo necesites */
+    height: 52px;
     border-radius: 50%; /* Para hacerlo circular si es necesario */
 }
 

@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\File;
-use SawaStacks\Utils\Kropify;
 
 
 class AdminController extends Controller
@@ -208,14 +207,14 @@ class AdminController extends Controller
         $old_picture = $admin->getAttributes()['picture'];
         $filename = 'ADMIN_IMG_'.uniqid().'.png';
 
-        $upload = Kropify::getFile($file, $filename)->maxWoH(255)->save($path);
-        //$upload = $file->move(public_path($path), $filename);
+        //$upload = Kropify::getFile($file, $filename)->maxWoH(255)->save($path);
+        $upload = $file->move(public_path($path), $filename);
         
         if($upload){
             if($old_picture != null && File::exists(public_path($path.$old_picture))){
                 File::delete(public_path($path.$old_picture));
             }
-            dd($upload);
+            
             $admin->update(['picture'=>$filename]);
             
             return response()->json(['status'=>1, 'msg'=>'Su foto fué cambiada con exito!.']);
