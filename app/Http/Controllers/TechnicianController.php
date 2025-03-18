@@ -189,6 +189,40 @@ class TechnicianController extends Controller
         return redirect()->route('tLogin')->with('success','Listo!, Tu contraseña ha sido reestablecida');
     }
 
+    public function profileView(){
+        $data = [
+            'pageTitle' => 'Perfil'
+        ];
+        return view('technician.back.pages.profile', $data);
+    }
+
+    public function updateProfilePicture(Request $request){
+        
+        $technician = Technician::findOrFail(auth('technician')->id());
+        $path = '/images/users/technicians/';
+        $file = $request->file('technicianProfilePictureFile');
+        $old_picture = $technician->getAttributes()['picture'];
+        $filename = 'TECH_IMG_'.uniqid().'.jpg';
+
+        $upload = $file->move(public_path($path), $filename);
+        
+        if($upload){
+            if($old_picture != null && File::exists(public_path($path.$old_picture))){
+                File::delete(public_path($path.$old_picture));
+            }
+            
+            $technician->update(['picture'=>$filename]);
+            
+            return response()->json(['status'=>1, 'msg'=>'Su foto fué cambiada con exito!.']);
+            
+
+        }else{
+            return response()->json(['status'=>0,'msg'=>'Algo salió mal!.']); 
+        }
+
+        
+    }
+
     /**
      * Display a listing of the resource.
      */

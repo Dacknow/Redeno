@@ -50,17 +50,18 @@
                             <!-- Formulario de Información Personal -->
                             <div class="tab-pane fade {{ $tab == 'personal_details' ? 'active show' : ''}}" id="personal_details" role="tabpanel">
                                 <div class="pd-20">
+                                    <x-form-alerts></x-form-alerts>
                                     <form id="personal-info-form" wire:submit="updatePersonalDetails()">
                                         <div class="form-group">
                                             <label for="name">Nombre Completo</label>
-                                            <input wire:model="name" type="text" class="form-control" id="name" name="name" required>
+                                            <input wire:model="name" type="text" class="form-control" id="name" name="name">
                                             @error('name')
                                                 <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
                                         <div class="form-group">
                                             <label for="username">Usuario</label>
-                                            <input wire:model="username" type="text" class="form-control" id="username" name="username" required>
+                                            <input wire:model="username" type="text" class="form-control" id="username" name="username">
                                             @error('username')
                                                 <span class="text-danger">{{ $message }}</span>
                                             @enderror
@@ -82,6 +83,7 @@
                             <!-- Formulario de Cambio de Contraseña -->
                             <div class="tab-pane fade {{ $tab == 'update_password' ? 'active show' : ''}}" id="update_password" role="tabpanel">
                                 <div class="pd-20">
+                                    <x-form-alerts></x-form-alerts>
                                     <form id="password-form" wire:submit="updatePassword()">
                                         <div class="form-group">
                                             <label for="current-password">Contraseña Actual</label>

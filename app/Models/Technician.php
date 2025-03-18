@@ -27,6 +27,7 @@ class Technician extends Authenticatable
         'celphone',
         'password',
         'state',
+        'picture',
     ];
 
     /**
@@ -58,5 +59,9 @@ class Technician extends Authenticatable
     public function notifications()
     {
         return $this->hasMany(Notification::class);
+    }
+
+    public function getPictureAttribute($value){
+        return $value ? asset('images/users/technicians/'.$value) : asset('images/users/default-profile.png');
     }
 }

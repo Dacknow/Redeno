@@ -22,7 +22,8 @@ class TechnicianSeeder extends Seeder
             'email' => 'juan.perez@example.com', // Correo electrónico
             'celphone' => '3001234567', // Número de teléfono
             'password' => Hash::make('password'), // Contraseña hasheada
-            'state' => 1, // Estado (1 para activo, 0 para inactivo)
+            'state' => 1, // Estado (1 para activo, 0 para inactivo)            
+            'picture' => null, // Imagen de perfil (opcional)
         ]);
 
         // Mensaje de confirmación

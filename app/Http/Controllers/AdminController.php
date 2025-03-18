@@ -205,7 +205,7 @@ class AdminController extends Controller
         $path = '/images/users/admins/';
         $file = $request->file('adminProfilePictureFile');
         $old_picture = $admin->getAttributes()['picture'];
-        $filename = 'ADMIN_IMG_'.uniqid().'.png';
+        $filename = 'ADMIN_IMG_'.uniqid().'.jpg';
 
         //$upload = Kropify::getFile($file, $filename)->maxWoH(255)->save($path);
         $upload = $file->move(public_path($path), $filename);

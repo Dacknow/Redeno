@@ -25,6 +25,8 @@ Route::middleware(['guest', 'preventBackHistory'])->group(function(){
 Route::middleware(['auth', 'preventBackHistory'])->group(function(){
     Route::controller(TechnicianController::class)->group(function(){
         Route::get('/home', 'home')->name('home');
-        Route::post('/logout-handler', 'logoutHandler')->name('tLogout-handler');
+        Route::post('/logout-handler', 'logoutHandler')->name('tLogout-handler');        
+        Route::get('/profile', 'profileView')->name('tProfile');
+        Route::post('/update-profile-picture', 'updateProfilePicture')->name('tUpdate_profile_picture');
     });
 });
