@@ -13,12 +13,15 @@ Route::middleware(['guest', 'preventBackHistory'])->group(function(){
         Route::get('/login', 'loginFormTechnician')->name('tLogin');
         Route::post('/login-handler', 'loginHandlerTechnician')->name('tLogin-handler');
         Route::get('/forgot-password', 'forgotFormTechnician')->name('tForgot-password');
+        Route::get('/register', 'registerFormTechnician')->name('tRegister');
     });
 
     Route::controller(TechnicianController::class)->group(function (){
         Route::post('/send-password-reset-link', 'sendPasswordResetLink')->name('tSend-password-reset-link');
         Route::get('/password/reset/{token}', 'resetPassword')->name('tReset-password');
         Route::post('/reset-password-handler', 'resetPasswordHandler')->name('tReset-password-handler');
+        Route::post('/register-handler', 'registerHandler')->name('tRegister-handler');        
+        Route::get('/email-validated/{technician}',[TechnicianController::class, 'emailValidated'])->name('tEmail-validated');
     });
 });
 

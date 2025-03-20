@@ -32,7 +32,7 @@
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-md-6 col-lg-7">
-                        @if(request()->routeIs('tLogin'))
+                        @if(request()->routeIs('tLogin') || request()->routeIs('tRegister'))
                             <img src="/back/vendors/images/login-page-img.png" alt="">
                         @elseif(request()->routeIs('tForgot-password'))
                             <img src="/back/vendors/images/forgot-password.png" alt=""> 

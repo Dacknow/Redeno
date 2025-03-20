@@ -57,8 +57,8 @@
 <body>
     <div class="container">
         <div class="header">
-            <img src="{{get_settings()->site_logo}}" alt="Logo">
-            <h2>{{$client->username}}Bienvenido a Nuestra Plataforma Techzonecali!</h2>
+            <img src="{{logo()}}" alt="Logo">
+            <h2>{{$technician->name}}Bienvenido a Nuestra Plataforma Redeno!</h2>
         </div>
         <div class="body-content">
             <h1>Te damos la bienvenida!</h1>
@@ -73,7 +73,7 @@
         </div>
         <div class="footer">
             <p>Si tienes alguna pregunta, no dudes en <a href="#">contactarnos</a>.</p>
-            <p>&copy; 2024 Techzone. Todos los derechos reservados.</p>
+            <p>&copy; 2025 Redeno. Todos los derechos reservados.</p>
         </div>
     </div>
 </body>

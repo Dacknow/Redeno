@@ -223,6 +223,110 @@ class TechnicianController extends Controller
         
     }
 
+    public function registerHandler(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|min:2|max:44',
+            'username' => 'required|min:2|max:44|unique:technicians,username',
+            'email' => 'required|email|max:149|unique:technicians,email',
+            'identification' => 'required|min:8|max:11|unique:technicians,identification',
+            'celphone' => 'required|min:10|max:10',
+            'new_password' => 'required|min:5|max:45|confirmed',       
+        ],[
+            'name.required'=>'Escriba un nombre',
+            'name.min'=>'El nombre es demasiado corto',
+            'name.max'=>'El nombre es demasiado largo',
+            'username.required'=>'Escriba un nombre de usuario',
+            'username.min'=>'El nombre de usuario es demasiado corto',
+            'username.max'=>'El nombre de usuario es demasiado largo',
+            'username.unique'=>'El nombre de usuario ya existe',
+            'email.required'=>'Escriba un correo electrónico',
+            'email.email'=>'La dirección de correo electrónico no es válida',
+            'email.max'=>'La dirección de correo electrónico es demasiado larga',
+            'identification.required'=>'Escriba su número de identificación',
+            'identification.min'=>'El número de identificación es demasiado corto',
+            'identification.max'=>'El número de identificación es demasiado largo',
+            'identification.unique'=>'El número de identificación ya existe',
+            'celphone.required'=>'Escriba su número de celular',
+            'celphone.min'=>'El número de celular es demasiado corto',
+            'celphone.max'=>'El número de celular es demasiado largo',
+            'new_password.required' => 'Ingrese una nueva contraseña',
+            'new_password.min' => 'La nueva contraseña es demasiado corta',
+            'new_password.max' => 'La nueva contraseña es demasiado larga',
+            'new_password.confirmed' => 'Las contraseñas no coinciden',
+        ]);        
+
+        $technician = new Technician();
+        $technician->name = $request->name;
+        $technician->email = $request->email;
+        $technician->username = $request->username;
+        $technician->identification = $request->identification;
+        $technician->celphone = $request->celphone;
+        $technician->password = Hash::make($request->new_password);       
+        $technician->update(['state' => 1]);
+
+        $technician->save();
+
+        $actionLink = route('tEmail-validated', ['technician' => $technician->id]);
+
+        $data = array(
+            'actionLink' => $actionLink,
+            'technician' => $technician
+        );
+
+        $mail_body = view('email-templates.technician-email-validated-template', $data)->render();
+
+        $mailConfig = array(
+            'mail_from_email' => env('EMAIL_FROM_ADDRESS'),
+            'mail_from_name' => env('EMAIL_FROM_NAME'),
+            'mail_recipient_email' => $technician->email,
+            'mail_recipient_name' => $technician->name,
+            'mail_subject' => 'Reset password',
+            'mail_body' => $mail_body
+
+        );
+
+        if (sendEmail($mailConfig)) {
+            session()->flash('success', 'Te enviamos un correo de confirmación');
+            return redirect()->route('tLogin');
+        } else {
+            session()->flash('fail', 'Algo salió mal!');
+            return redirect()->route('tRegister');
+        }
+
+        
+    }
+
+    public function emailValidated($technician, Request $request){
+        
+        $technician = Technician::findOrFail($technician);
+        $technician->update([
+           'state' => 1
+        ]);
+        
+        Auth::guard('technician')->login($technician);
+
+        // Capturar los detalles de la sesión
+        $sessionId = session()->getId();
+        $ipAddress = $request->ip();
+        $userAgent = $request->header('User-Agent');
+        $payload = json_encode(['login_id' => $request->login_id]);
+        $lastActivity = now(-5)->timestamp; 
+
+        // Insertar los detalles en la tabla session
+        DB::table('sessions')->insert([
+            'id' => $sessionId,
+            'user_id' => Auth::guard('technician')->user()->id,
+            'guard' => 'technician',
+            'ip_address' => $ipAddress,
+            'user_agent' => $userAgent,
+            'payload' => $payload,
+            'last_activity' => $lastActivity
+        ]);
+
+        return redirect()->route('home');
+    }
+
     /**
      * Display a listing of the resource.
      */

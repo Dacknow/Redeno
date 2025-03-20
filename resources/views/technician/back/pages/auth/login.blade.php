@@ -32,14 +32,14 @@
         @error('password')
             <span class="text-danger ml-1">{{$message}}</span>
         @enderror
+        
         <div class="row pb-30">
-            <div class="col-6">
-                <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="customCheck1">
-                    <label class="custom-control-label" for="customCheck1">Recordarme</label>
+            <div class="col-5">
+                <div class="input-group">
+                    <a href="{{route('tRegister')}}">Crear Cuenta</a>
                 </div>
             </div>
-            <div class="col-6">
+            <div class="col-7">
                 <div class="forgot-password">
                     <a href="{{route('tForgot-password')}}">Recuperar Contraseña</a>
                 </div>
@@ -47,8 +47,8 @@
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <div class="input-group mb-2">
-                    <input class="btn btn-primary btn-lg btn-block" type="submit" value="Iniciar Sesión">
+                <div class="input-group mb-0">
+                    <button type="submit" class="btn btn-primary btn-lg btn-block">Iniciar Sesión</button>
                 </div>
             </div>
         </div>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
@@ -65,6 +66,18 @@ class AuthController extends Controller
         );
 
         if(Auth::guard('admin')->attempt($creds) ){
+            $admin = Auth::guard('admin')->user();
+            // Insertar datos en la tabla `sessions`
+            DB::table('sessions')->insert([
+                'id' => session()->getId(),
+                'user_id' => $admin->id,
+                'guard' => 'admin', // Especificamos el guard
+                'ip_address' => $request->ip(),
+                'user_agent' => $request->header('User-Agent'),
+                'payload' => json_encode(['login_id' => $request->login_id]),
+                'last_activity' => now()->timestamp
+            ]);
+            
             return redirect()-> route('dashboard');
             
         }else{
@@ -101,13 +114,31 @@ class AuthController extends Controller
         $creds = array(
             $fieldType => $request->login_id,
             'password'=>$request->password
-        );
+        );        
 
         if(Auth::guard('technician')->attempt($creds) ){
+            $technician = Auth::guard('technician')->user();
+
+            // Insertar datos en la tabla `sessions`
+            DB::table('sessions')->insert([
+                'id' => session()->getId(),
+                'user_id' => $technician->id,
+                'guard' => 'technician', // Especificamos el guard
+                'ip_address' => $request->ip(),
+                'user_agent' => $request->header('User-Agent'),
+                'payload' => json_encode(['login_id' => $request->login_id]),
+                'last_activity' => now()->timestamp
+            ]);
             return redirect()-> route('home');
         }else{
             session()->flash('fail','Incorrect Credentials ');
             return redirect()-> route('tLogin');
         }
+    }
+    public function registerFormTechnician(){
+        $data = [
+            'pageTitle' => 'Registro'
+        ];
+        return view('technician.back.pages.auth.register', $data);
     }
 }

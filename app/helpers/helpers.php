@@ -31,4 +31,8 @@ if(!function_exists('sendEmail')){
             return false;
         }
     }
+    // funcion para llamar la imagen del logo
+    function logo(){
+        return asset('img/logo.png');
+    }
 }
