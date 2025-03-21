@@ -67,18 +67,28 @@ class AuthController extends Controller
 
         if(Auth::guard('admin')->attempt($creds) ){
             $admin = Auth::guard('admin')->user();
-            // Insertar datos en la tabla `sessions`
-            DB::table('sessions')->insert([
-                'id' => session()->getId(),
-                'user_id' => $admin->id,
-                'guard' => 'admin', // Especificamos el guard
-                'ip_address' => $request->ip(),
-                'user_agent' => $request->header('User-Agent'),
-                'payload' => json_encode(['login_id' => $request->login_id]),
-                'last_activity' => now()->timestamp
-            ]);
+
+            if(!$admin->state){
+                Auth::guard('admin')->logout(); // Cierra la sesión del guard 'admin'
+                $request->session()->invalidate(); // Invalida la sesión
+                $request->session()->regenerateToken(); // Regenera el token CSRF
+                session()->flash('fail','Cuenta Inactiva');
+                return redirect()->route('login');
+            }else{
             
-            return redirect()-> route('dashboard');
+                // Insertar datos en la tabla `sessions`
+                DB::table('sessions')->insert([
+                    'id' => session()->getId(),
+                    'user_id' => $admin->id,
+                    'guard' => 'admin', // Especificamos el guard
+                    'ip_address' => $request->ip(),
+                    'user_agent' => $request->header('User-Agent'),
+                    'payload' => json_encode(['login_id' => $request->login_id]),
+                    'last_activity' => now()->timestamp
+                ]);
+                
+                return redirect()-> route('dashboard');
+            }
             
         }else{
             session()->flash('fail','Incorrect Credentials');
@@ -119,17 +129,25 @@ class AuthController extends Controller
         if(Auth::guard('technician')->attempt($creds) ){
             $technician = Auth::guard('technician')->user();
 
+            if(!$technician->state){
+                Auth::guard('technician')->logout(); // Cierra la sesión del guard 'admin'
+                $request->session()->invalidate(); // Invalida la sesión
+                $request->session()->regenerateToken(); // Regenera el token CSRF
+                session()->flash('fail','Cuenta Inactiva');
+                return redirect()->route('tLogin');
+            }else{
             // Insertar datos en la tabla `sessions`
-            DB::table('sessions')->insert([
-                'id' => session()->getId(),
-                'user_id' => $technician->id,
-                'guard' => 'technician', // Especificamos el guard
-                'ip_address' => $request->ip(),
-                'user_agent' => $request->header('User-Agent'),
-                'payload' => json_encode(['login_id' => $request->login_id]),
-                'last_activity' => now()->timestamp
-            ]);
-            return redirect()-> route('home');
+                DB::table('sessions')->insert([
+                    'id' => session()->getId(),
+                    'user_id' => $technician->id,
+                    'guard' => 'technician', // Especificamos el guard
+                    'ip_address' => $request->ip(),
+                    'user_agent' => $request->header('User-Agent'),
+                    'payload' => json_encode(['login_id' => $request->login_id]),
+                    'last_activity' => now()->timestamp
+                ]);
+                return redirect()-> route('home');
+            }
         }else{
             session()->flash('fail','Incorrect Credentials ');
             return redirect()-> route('tLogin');
