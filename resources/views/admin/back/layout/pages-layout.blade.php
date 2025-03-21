@@ -213,7 +213,7 @@
 							</a>
 						</li>
 						<li>
-							<a href="usuarios.html" class="dropdown-toggle no-arrow">
+							<a href="{{route('users')}}" class="dropdown-toggle no-arrow {{Route::is('users') ? 'active' : ''}}">
 								<span class="micon fa fa-users"></span>
 								<span class="mtext">Usuarios</span>
 							</a>

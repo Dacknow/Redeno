@@ -226,6 +226,13 @@ class AdminController extends Controller
 
         
     }
+
+    public function usersPage(){
+        $data = [
+            'pageTitle' => 'Usuarios'
+        ];
+        return view('admin.back.pages.users.users-page', $data);
+    }
     
 
     /**
