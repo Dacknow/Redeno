@@ -20,7 +20,7 @@ class AdminController extends Controller
 
     public function dashboard(){
         $data = [
-            'pageTitle' => 'Dashboard'
+            'pageTitle' => 'Inicio'
         ];
         return view('admin.back.pages.dashboard', $data);
     }
@@ -276,6 +276,40 @@ class AdminController extends Controller
 
         session()->flash('success', 'Los datos del técnico fueron actualizados con éxito!');
         return redirect()->route('users.edit-technician', $technician);
+    }
+
+    public function editAdminForm(Admin $admin){
+        $data = [
+            'pageTitle' => 'Editar Administrador',
+            'admin' => $admin
+        ];
+        return view('admin.back.pages.users.edit-admin-form', $data);
+    }
+
+    public function updateAdmin(Admin $admin, Request $request)
+    {
+        $request->validate([
+            'name' => 'required|min:2|max:44',
+            'username' => 'required|min:2|max:44|unique:admins,username,'.$admin->id,
+            'email' => 'required|email|max:149|unique:admins,email,'.$admin->id     
+        ], [
+            'name.required' => 'Escriba un nombre',
+            'name.min' => 'El nombre es demasiado corto',
+            'name.max' => 'El nombre es demasiado largo',
+            'username.required' => 'Escriba un nombre de usuario',
+            'username.min' => 'El nombre de usuario es demasiado corto',
+            'username.max' => 'El nombre de usuario es demasiado largo',
+            'username.unique' => 'El nombre de usuario ya existe',
+            'email.required' => 'Escriba un correo electrónico',
+            'email.email' => 'La dirección de correo electrónico no es válida',
+            'email.max' => 'La dirección de correo electrónico es demasiado larga',
+            'email.unique' => 'El correo electrónico ya está en uso'
+        ]);
+
+        $admin->update($request->all());
+
+        session()->flash('success', 'Los datos del administrador fueron actualizados con éxito!');
+        return redirect()->route('users.edit-admin', $admin);
     }
 
     

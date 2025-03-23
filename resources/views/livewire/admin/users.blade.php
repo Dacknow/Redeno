@@ -50,7 +50,7 @@
                                                     <td>{{ $admin->name }}</td>
                                                     <td>{{ $admin->email }}</td>
                                                     <td>{{ $admin->username }}</td>
-                                                    <td><button class="btn btn-info btn-sm">Editar</button></td>
+                                                    <td><a href="{{route('users.edit-admin', $admin)}}" class="btn btn-info btn-sm">Editar</a></td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
