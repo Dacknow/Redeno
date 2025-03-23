@@ -102,7 +102,7 @@
                                                     <td>{{ $technician->identification }}</td>
                                                     <td>{{ $technician->celphone }}</td>
                                                     <td>{{ $technician->state == 1? 'Activo' : 'Inactivo' }}</td>
-                                                    <td><button class="btn btn-info btn-sm">Editar</button></td>
+                                                    <td><a href="{{route('users.edit-technician', $technician)}}" class="btn btn-info btn-sm">Editar</a></td>
                                                 </tr>
                                             @endforeach
                                         </tbody>

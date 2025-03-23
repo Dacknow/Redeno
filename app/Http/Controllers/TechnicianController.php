@@ -233,68 +233,66 @@ class TechnicianController extends Controller
             'celphone' => 'required|min:10|max:10',
             'new_password' => 'required|min:5|max:45|confirmed',       
         ],[
-            'name.required'=>'Escriba un nombre',
-            'name.min'=>'El nombre es demasiado corto',
-            'name.max'=>'El nombre es demasiado largo',
-            'username.required'=>'Escriba un nombre de usuario',
-            'username.min'=>'El nombre de usuario es demasiado corto',
-            'username.max'=>'El nombre de usuario es demasiado largo',
-            'username.unique'=>'El nombre de usuario ya existe',
-            'email.required'=>'Escriba un correo electrónico',
-            'email.email'=>'La dirección de correo electrónico no es válida',
-            'email.max'=>'La dirección de correo electrónico es demasiado larga',
-            'identification.required'=>'Escriba su número de identificación',
-            'identification.min'=>'El número de identificación es demasiado corto',
-            'identification.max'=>'El número de identificación es demasiado largo',
-            'identification.unique'=>'El número de identificación ya existe',
-            'celphone.required'=>'Escriba su número de celular',
-            'celphone.min'=>'El número de celular es demasiado corto',
-            'celphone.max'=>'El número de celular es demasiado largo',
+            'name.required' => 'Escriba un nombre',
+            'name.min' => 'El nombre es demasiado corto',
+            'name.max' => 'El nombre es demasiado largo',
+            'username.required' => 'Escriba un nombre de usuario',
+            'username.min' => 'El nombre de usuario es demasiado corto',
+            'username.max' => 'El nombre de usuario es demasiado largo',
+            'username.unique' => 'El nombre de usuario ya existe',
+            'email.required' => 'Escriba un correo electrónico',
+            'email.email' => 'La dirección de correo electrónico no es válida',
+            'email.max' => 'La dirección de correo electrónico es demasiado larga',
+            'identification.required' => 'Escriba su número de identificación',
+            'identification.min' => 'El número de identificación es demasiado corto',
+            'identification.max' => 'El número de identificación es demasiado largo',
+            'identification.unique' => 'El número de identificación ya existe',
+            'celphone.required' => 'Escriba su número de celular',
+            'celphone.min' => 'El número de celular es demasiado corto',
+            'celphone.max' => 'El número de celular es demasiado largo',
             'new_password.required' => 'Ingrese una nueva contraseña',
             'new_password.min' => 'La nueva contraseña es demasiado corta',
             'new_password.max' => 'La nueva contraseña es demasiado larga',
             'new_password.confirmed' => 'Las contraseñas no coinciden',
-        ]);        
+        ]);
 
+        // Asignamos valores 
         $technician = new Technician();
-        $technician->name = $request->name;
-        $technician->email = $request->email;
-        $technician->username = $request->username;
-        $technician->identification = $request->identification;
-        $technician->celphone = $request->celphone;
-        $technician->password = Hash::make($request->new_password);       
-        $technician->update(['state' => 1]);
+        $technician->fill($request->only(['name', 'email', 'username', 'identification', 'celphone']));
+        $technician->password = Hash::make($request->new_password);
+        $technician->state = 1; // Se asigna antes de guardar
 
-        $technician->save();
+        // Guardar y verificar si fue exitoso
+        if ($technician->save()) {
+            $actionLink = route('tEmail-validated', ['technician' => $technician->id]);
 
-        $actionLink = route('tEmail-validated', ['technician' => $technician->id]);
+            $data = [
+                'actionLink' => $actionLink,
+                'technician' => $technician
+            ];
 
-        $data = array(
-            'actionLink' => $actionLink,
-            'technician' => $technician
-        );
+            $mail_body = view('email-templates.technician-email-validated-template', $data)->render();
 
-        $mail_body = view('email-templates.technician-email-validated-template', $data)->render();
+            $mailConfig = [
+                'mail_from_email' => env('EMAIL_FROM_ADDRESS'),
+                'mail_from_name' => env('EMAIL_FROM_NAME'),
+                'mail_recipient_email' => $technician->email,
+                'mail_recipient_name' => $technician->name,
+                'mail_subject' => 'Verificación de cuenta',
+                'mail_body' => $mail_body
+            ];
 
-        $mailConfig = array(
-            'mail_from_email' => env('EMAIL_FROM_ADDRESS'),
-            'mail_from_name' => env('EMAIL_FROM_NAME'),
-            'mail_recipient_email' => $technician->email,
-            'mail_recipient_name' => $technician->name,
-            'mail_subject' => 'Reset password',
-            'mail_body' => $mail_body
-
-        );
-
-        if (sendEmail($mailConfig)) {
-            session()->flash('success', 'Te enviamos un correo de confirmación');
-            return redirect()->route('tLogin');
+            if (sendEmail($mailConfig)) {
+                session()->flash('success', 'Te enviamos un correo de confirmación');
+                return redirect()->route('tLogin');
+            } else {
+                session()->flash('fail', 'No se pudo enviar el correo, pero la cuenta fue creada.');
+                return redirect()->route('tRegister');
+            }
         } else {
-            session()->flash('fail', 'Algo salió mal!');
+            session()->flash('fail', 'Hubo un error al registrar el técnico.');
             return redirect()->route('tRegister');
         }
-
-        
     }
 
     public function emailValidated($technician, Request $request){

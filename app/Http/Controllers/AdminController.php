@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Admin;
+use App\Models\Technician;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use constGuards;
@@ -233,6 +234,50 @@ class AdminController extends Controller
         ];
         return view('admin.back.pages.users.users-page', $data);
     }
+
+    public function editTechnicianForm(Technician $technician){
+        $data = [
+            'pageTitle' => 'Editar Técnico',
+            'technician' => $technician
+        ];
+        return view('admin.back.pages.users.edit-technician-form', $data);
+    }
+
+    public function updateTechnician(Technician $technician, Request $request)
+    {
+        $request->validate([
+            'name' => 'required|min:2|max:44',
+            'username' => 'required|min:2|max:44|unique:technicians,username,'.$technician->id,
+            'email' => 'required|email|max:149|unique:technicians,email,'.$technician->id,
+            'identification' => 'required|min:8|max:11|unique:technicians,identification,'.$technician->id,
+            'celphone' => 'required|min:10|max:10',     
+        ], [
+            'name.required' => 'Escriba un nombre',
+            'name.min' => 'El nombre es demasiado corto',
+            'name.max' => 'El nombre es demasiado largo',
+            'username.required' => 'Escriba un nombre de usuario',
+            'username.min' => 'El nombre de usuario es demasiado corto',
+            'username.max' => 'El nombre de usuario es demasiado largo',
+            'username.unique' => 'El nombre de usuario ya existe',
+            'email.required' => 'Escriba un correo electrónico',
+            'email.email' => 'La dirección de correo electrónico no es válida',
+            'email.max' => 'La dirección de correo electrónico es demasiado larga',
+            'email.unique' => 'El correo electrónico ya está en uso',
+            'identification.required' => 'Escriba su número de identificación',
+            'identification.min' => 'El número de identificación es demasiado corto',
+            'identification.max' => 'El número de identificación es demasiado largo',
+            'identification.unique' => 'El número de identificación ya existe',
+            'celphone.required' => 'Escriba su número de celular',
+            'celphone.min' => 'El número de celular es demasiado corto',
+            'celphone.max' => 'El número de celular es demasiado largo',
+        ]);
+
+        $technician->update($request->all());
+
+        session()->flash('success', 'Los datos del técnico fueron actualizados con éxito!');
+        return redirect()->route('users.edit-technician', $technician);
+    }
+
     
 
     /**

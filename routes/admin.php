@@ -32,5 +32,8 @@ Route::middleware('auth', 'preventBackHistory')->group(function () {
         Route::get('/profile', 'profileView')->name('profile');
         Route::post('/update-profile-picture', 'updateProfilePicture')->name('update_profile_picture');
         Route::get('/users', 'usersPage')->name('users');
+        Route::get('/users/edit-technician/{technician}', 'editTechnicianForm')->name('users.edit-technician');
+        Route::put('/users/update-technician/{technician}', 'updateTechnician')->name('users.update-technician');
+
     });
 });
