@@ -2,13 +2,14 @@
 @section('pageTitle', isset($pageTitle) ? $pageTitle : 'Editar Técnico')
 @section('content')
 
-<div class="pd-20 card-box mb-30 p-5">
-    <div class="pull-right">
-        <a href="{{ route('users') }}?tab=technicians"><i class="icon-copy dw dw-left-arrow2"></i></a>
-    </div>
-    <div class="clearfix">
+<div class="pd-20 card-box">
+    
+    <div class="clearfix mb-20">
         <div class="pull-left">
             <h4 class="text-blue h4">Editar Técnico</h4>
+        </div>
+        <div class="pull-right">
+            <a href="{{ route('users') }}?tab=technicians"><i class="icon dw dw-left-arrow2"></i></a>
         </div>
     </div>
 

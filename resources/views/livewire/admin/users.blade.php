@@ -29,6 +29,9 @@
                                         <div class="pull-left">
                                             <h4 class="text-blue h4">Listado de Administradores</h4>
                                         </div>
+                                        <div class="pull-right">
+                                            <a href="{{ route('users.create-admin') }}"><i class="icon dw dw-add-user"></i></a>
+                                        </div>
                                     </div>
                                     
                                     <input wire:model.live="searchAdmin" id="search" type="text" class="form-control mb-3" placeholder="Ingrese el nombre o el correo de un usuario">

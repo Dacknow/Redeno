@@ -2,9 +2,9 @@
 @section('pageTitle', isset($pageTitle) ? $pageTitle : 'Editar Administrador')
 @section('content')
 
-<div class="pd-20 card-box mb-30 p-5">
+<div class="pd-20 card-box">
     <div class="pull-right">
-        <a href="{{ route('users') }}?tab=admins"><i class="icon-copy dw dw-left-arrow2"></i></a>
+        <a href="{{ route('users') }}?tab=admins"><i class="icon dw dw-left-arrow2"></i></a>
     </div>
     <div class="clearfix">
         <div class="pull-left">

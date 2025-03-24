@@ -36,6 +36,8 @@ Route::middleware('auth', 'preventBackHistory')->group(function () {
         Route::put('/users/update-technician/{technician}', 'updateTechnician')->name('users.update-technician');
         Route::get('/users/edit-admin/{admin}', 'editAdminForm')->name('users.edit-admin');
         Route::put('/users/update-admin/{admin}', 'updateAdmin')->name('users.update-admin');
+        Route::get('/users/create-admin', 'createAdminForm')->name('users.create-admin');
+        Route::post('/users/store-admin', 'storeAdmin')->name('users.store-admin');
 
     });
 });

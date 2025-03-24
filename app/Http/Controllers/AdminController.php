@@ -312,6 +312,58 @@ class AdminController extends Controller
         return redirect()->route('users.edit-admin', $admin);
     }
 
+   
+    public function createAdminForm(){
+        $data = [
+            'pageTitle' => 'Crear Administrador'
+        ];
+        return view('admin.back.pages.users.create-admin-form', $data);
+    }
+
+    public function storeAdmin(Request $request){
+        $request->validate([
+            'name' =>'required|min:2|max:44',
+            'username' =>'required|min:2|max:44|unique:admins',
+            'email' =>'required|email|max:149|unique:admins',
+            'state' =>'required|in:0,1',
+            'new_password'=>'required|min:5|max:45|required_with:new_password_confirmation|
+            same:new_password_confirmation',
+            'new_password_confirmation'=>'required'     
+        ], [
+            'name.required' => 'Escriba un nombre',
+            'name.min' => 'El nombre es demasiado corto',
+            'name.max' => 'El nombre es demasiado largo',
+            'username.required' => 'Escriba un nombre de usuario',
+            'username.min' => 'El nombre de usuario es demasiado corto',
+            'username.max' => 'El nombre de usuario es demasiado largo',
+            'username.unique' => 'El nombre de usuario ya existe',
+            'email.required' => 'Escriba un correo electrónico',
+            'email.email' => 'La dirección de correo electrónico no es válida',
+            'email.max' => 'La dirección de correo electrónico es demasiado larga',
+            'email.unique' => 'El correo electrónico ya está en uso',
+            'new_password.required'=>'Se requiere que escriba una nueva contraseña',
+            'new_password.min'=>'La nueva contraseña es demasiado corta',
+            'new_password.max'=>'La nueva contraseña es demasiado larga',
+            'new_password.same'=>'Las contraseñas no coinciden',
+            'new_password_confirmation.required'=>'Se requiere la confirmación de la nueva contraseña',
+            'state.required' => 'Seleccione un estado',
+            '0.in'=>'El estado no es válido',
+            '1.in'=>'El estado no es válido'
+
+        ]);
+        $data = $request->all();
+        $data['password'] = bcrypt($data['new_password']);
+
+        if(Admin::create($data)){
+           session()->flash('success', 'El administrador ha sido creado con éxito!');
+        return redirect()->route('users'); 
+        }else{
+            session()->flash('error', 'Hubo un error al crear el administrador!');
+            return redirect()->route('users.create-admin');
+        }
+        
+    }
+
     
 
     /**
