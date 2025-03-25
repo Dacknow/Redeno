@@ -71,12 +71,6 @@ class Profile extends Component
                 'username'=> $this->username
             ]);
 
-            // Actualizar info admin
-            // $this->dispatch('updateAdminInfo', 
-            //     adminName: $this->name,
-            //     adminEmail: $this->email
-            // );
-
             $this->dispatch('updateAdminInfo')->to(Profile::class);
 
             $this->dispatch('updateAdminHeaderInfo')->to(TopAdminInfo::class);

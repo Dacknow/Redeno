@@ -6,6 +6,7 @@ use App\Models\Subdomain;
 use App\Models\DataNoveltyType;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\DB;
 
 class Templates extends Component
 {
@@ -23,6 +24,7 @@ class Templates extends Component
     public $editingDataId, $editingDataName;
     public $editData;
     public $selectedNoveltyType;
+    public $newDataName, $newNoveltyTypeName;
 
     public function updatingSearch(){
         $this->resetPage();
@@ -54,28 +56,53 @@ class Templates extends Component
     }
     public function updateNoveltyType()
     {
-        $noveltyType = Subdomain::findOrFail($this->editingNoveltyTypeId);
-        $noveltyType->subdomain = $this->editingNoveltyTypeName;
-        $noveltyType->save();
+        // Validación de los datos
+        $validatedData = $this->validate([
+            'editingNoveltyTypeName' => 'required|max:100',
+            'selectedData' => 'nullable|array'
+        ], [
+            'editingNoveltyTypeName.required' => 'El nombre de tipo de novedad es requerido',
+            'editingNoveltyTypeName.max' => 'El nombre de tipo de novedad no puede exceder los 100 caracteres',
+            'selectedData.array' => 'Los datos seleccionados deben ser un array',
+        ]);
 
-        // Actualizar relaciones en DataNoveltyType
-        DataNoveltyType::where('novelty_type_id', $this->editingNoveltyTypeId)->delete();
-        foreach ($this->selectedData as $dataId) {
-            DataNoveltyType::create([
-                'novelty_type_id' => $this->editingNoveltyTypeId,
-                'data_id' => $dataId,
-            ]);
+        try {
+            DB::beginTransaction(); // Iniciar una transacción
+
+            // Buscar y actualizar el tipo de novedad
+            $noveltyType = Subdomain::findOrFail($this->editingNoveltyTypeId);
+            $noveltyType->subdomain = $this->editingNoveltyTypeName;
+            $noveltyType->save();
+
+            // Actualizar relaciones en DataNoveltyType
+            DataNoveltyType::where('novelty_type_id', $this->editingNoveltyTypeId)->delete();
+
+            if (!empty($this->selectedData)) {
+                foreach ($this->selectedData as $dataId) {
+                    DataNoveltyType::create([
+                        'novelty_type_id' => $this->editingNoveltyTypeId,
+                        'data_id' => $dataId,
+                    ]);
+                }
+            }
+
+            DB::commit(); // Confirmar la transacción
+
+            // Emitir eventos de éxito
+            $this->dispatch('success', '¡Tipo de novedad actualizado con éxito!');
+            $this->dispatch('hide-modal');
+            $this->reset(['editingNoveltyTypeId', 'editingNoveltyTypeName', 'selectedData']);
+        } catch (\Exception $e) {
+            DB::rollBack(); // Revertir cambios si hay un error 
+            
+            // Registrar error en el log (opcional para depuración)
+            \Log::error('Error al actualizar el tipo de novedad: ' . $e->getMessage());
+
+            // Emitir alerta de error
+            $this->dispatch('error', 'Hubo un error al actualizar el tipo de novedad.');
         }
-
-        // Emitir un evento para mostrar la alerta
-        $this->dispatch('success', '¡Tipo de novedad actualizado con éxito!');
-
-        // Disparar evento para cerrar el modal
-        $this->dispatch('hide-modal');
-        // Resetear valores
-        $this->reset(['editingNoveltyTypeId', 'editingNoveltyTypeName', 'selectedData']);
-        
     }
+
 
 
 
@@ -91,37 +118,135 @@ class Templates extends Component
 
     public function updateData()
     {
-        if ($this->editData) {
-            $this->editData->subdomain = $this->editingDataName;
-            $this->editData->save();
+        $this->validate([
+            'editingDataName' => 'required|max:100',
+        ], [
+            'editingDataName.required' => 'El nombre del dato es requerido.',
+            'editingDataName.max' => 'El nombre del dato no puede exceder los 100 caracteres.',
+        ]);
+
+        try {
+            if ($this->editData) {
+                DB::transaction(function () {
+                    $this->editData->subdomain = $this->editingDataName;
+                    $this->editData->save();
+                });
+
+                // Emitir eventos de éxito
+                $this->dispatch('success', '¡Dato actualizado con éxito!');
+                $this->dispatch('hide-modal');
+
+                // Resetear variables solo si todo salió bien
+                $this->reset(['editData', 'editingDataId', 'editingDataName']);
+            }
+        } catch (\Exception $e) {
+            \Log::error('Error al actualizar el dato: ' . $e->getMessage());
+
+            // Emitir mensaje de error
+            $this->dispatch('error', 'Hubo un error al actualizar el dato.');
         }
-    
-        // Emitir un evento para mostrar la alerta
-        $this->dispatch('success', '¡Dato actualizado con éxito!');
+    }
 
-        // Cerrar el modal
-        $this->dispatch('hide-modal');
-    
-        // Limpiar variables
-        $this->reset(['editData', 'editingDataId', 'editingDataName']);
 
-               
+    public function create_novelty_type(){
+        $this->dispatch('show-create-novelty-modal');
+    }
+
+    public function store_novelty_type()
+    {
+        $this->validate([
+            'newNoveltyTypeName' => 'required|max:100',
+            'selectedData' => 'nullable|array',
+        ], [
+            'newNoveltyTypeName.required' => 'El nombre del tipo de novedad es obligatorio.',
+            'newNoveltyTypeName.max' => 'El nombre no puede exceder los 100 caracteres.',
+            'selectedData.array' => 'Los datos seleccionados deben ser un array válido.',
+        ]);
+
+        try {
+            DB::transaction(function () {
+                $noveltyType = Subdomain::create([
+                    'domain_id' => getDomainId('report_type'),
+                    'subdomain' => $this->newNoveltyTypeName
+                ]);
+
+                if (!empty($this->selectedData)) {
+                    $dataToInsert = collect($this->selectedData)->map(function ($dataId) use ($noveltyType) {
+                        return [
+                            'novelty_type_id' => $noveltyType->id,
+                            'data_id' => $dataId,
+                        ];
+                    })->toArray();
+
+                    DataNoveltyType::insert($dataToInsert); // Inserción masiva para mejor rendimiento
+                }
+
+                // Emitir evento de éxito
+                $this->dispatch('success', '¡Tipo de novedad creado con éxito!');
+                $this->dispatch('hide-modal');
+
+                // Limpiar variables
+                $this->reset(['newNoveltyTypeName', 'selectedData']);
+            });
+        } catch (\Exception $e) {
+            \Log::error('Error al crear el tipo de novedad: ' . $e->getMessage());
+            $this->dispatch('error', 'Hubo un error al crear el tipo de novedad.');
+        }
+    }
+
+
+    public function create_data(){
+        $this->dispatch('show-create-data-modal');
+    }
+
+    public function store_data()
+    {
+        $this->validate([
+            'newDataName' => 'required|max:100',
+        ], [
+            'newDataName.required' => 'El nombre del dato es obligatorio.',
+            'newDataName.max' => 'El nombre no puede exceder los 100 caracteres.',
+        ]);
+
+        try {
+            DB::transaction(function () {
+                Subdomain::create([
+                    'domain_id' => getDomainId('report_item'),
+                    'subdomain' => $this->newDataName
+                ]);
+
+                // Emitir un evento para mostrar la alerta
+                $this->dispatch('success', '¡Dato creado con éxito!');
+                $this->dispatch('hide-modal');
+
+                // Limpiar variables
+                $this->reset(['newDataName']);
+            });
+        } catch (\Exception $e) {
+            \Log::error('Error al crear el dato: ' . $e->getMessage());
+            $this->dispatch('error', 'Hubo un error al crear el dato.');
+        }
     }
 
     public function render()
     {
         $noveltyTypes = Subdomain::where('subdomain', 'like', '%'.$this->searchNoveltyType.'%')
-                    ->Where('domain_id', getDomainId('report_type'))
-                    ->paginate(10);
+            ->Where('domain_id', getDomainId('report_type'))
+            ->paginate(10, ['*'], 'noveltyTypesPage') // Nombre único para esta paginación
+            ->onEachSide(1)
+            ->withQueryString();
 
         $data = Subdomain::where('subdomain', 'like', '%'.$this->searchData.'%')
-                ->Where('domain_id', getDomainId('report_item'))
-                ->paginate(10);
+            ->Where('domain_id', getDomainId('report_item'))
+            ->paginate(10, ['*'], 'dataPage') // Nombre único para esta paginación
+            ->onEachSide(1)
+            ->withQueryString();
 
         return view('livewire.admin.templates', [
             'noveltyTypes' => $noveltyTypes,
             'data' => $data
         ]);
     }
+
 }
 

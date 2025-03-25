@@ -1,6 +1,5 @@
 <div>    
     <div class="row">
-        <x-form-alerts></x-form-alerts>
         <div class="col-12 mb-4">
             <div class="card-box overflow-hidden">
                 <div class="profile-tab">
@@ -22,7 +21,12 @@
                             <!-- Tipos de Novedad -->
                             <div class="tab-pane fade {{ $tab == 'novelty_types' ? 'active show' : '' }}">
                                 <div class="pd-20">
-                                    <h4 class="text-blue h4">Tipos de Novedad</h4>
+                                    <div class="pull-left">
+                                        <h4 class="text-blue h4">Tipos de Novedades</h4>
+                                    </div>
+                                    <div class="pull-right">
+                                        <a wire:click="create_novelty_type()"><i class="icon dw dw-add"></i></a>
+                                    </div>
                                     <input wire:model.live="searchNoveltyType" type="text" class="form-control mb-3" placeholder="Buscar...">
     
                                     @if($noveltyTypes->count())
@@ -49,6 +53,7 @@
                                                 @endforeach
                                             </tbody>
                                         </table>
+                                        {{ $noveltyTypes->links() }}
                                     @else
                                         <strong>No hay registros</strong>
                                     @endif
@@ -58,7 +63,12 @@
                             <!-- Datos -->
                             <div class="tab-pane fade {{ $tab == 'data' ? 'active show' : '' }}">
                                 <div class="pd-20">
-                                    <h4 class="text-blue h4">Datos</h4>
+                                    <div class="pull-left">
+                                        <h4 class="text-blue h4">Datos</h4>
+                                    </div>
+                                    <div class="pull-right">
+                                        <a wire:click="create_data()"><i class="icon dw dw-add"></i></a>
+                                    </div>
                                     <input wire:model.live="searchData" type="text" class="form-control mb-3" placeholder="Buscar...">
     
                                     @if($data->count())
@@ -85,6 +95,7 @@
                                                 @endforeach
                                             </tbody>
                                         </table>
+                                        {{ $data->links() }}
                                     @else
                                         <strong>No hay registros</strong>
                                     @endif
@@ -100,8 +111,13 @@
                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                                     </div>
                                     <div class="modal-body">
-                                        <input type="text" wire:model.defer="editingNoveltyTypeName" class="form-control mb-3">
-                                        
+                                        <div class="form-group">
+                                            <label for="editNoveltyType">Tipo de Novedad:</label>                                            
+                                            <input type="text" wire:model.defer="editingNoveltyTypeName" class="form-control mb-3">
+                                            @error('editingNoveltyTypeName')
+                                            <span class="text-danger" role="alert">{{$message}}</span>
+                                            @enderror
+                                        </div>
                                         <!-- Selección de datos asociados con checkboxes -->
                                         <label>Asociar Datos:</label>
                                         <div class="form-group">
@@ -122,8 +138,45 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>   
+                        </div>
 
+                        <!-- Modal para crear tipo de Novedad -->
+                        <div wire:ignore.self class="modal fade" id="createNoveltyModal" tabindex="-1" role="dialog" aria-labelledby="createNoveltyModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="createNoveltyModalLabel">Crear Tipo de Novedad</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <label for="newNoveltyTypeName">Nombre del Tipo de Novedad</label>
+                                        <input type="text" id="newNoveltyTypeName" wire:model.defer="newNoveltyTypeName" class="form-control">
+                                        @error('newNoveltyTypeName')
+                                            <span class="text-danger" role="alert">{{$message}}</span>
+                                        @enderror
+                                        <label for="createData">Asociar Datos:</label>
+                                        <div class="form-group">
+                                            @foreach($dataModal as $item)
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input"
+                                                wire:model="selectedData"
+                                                value="{{ $item->id }}"
+                                                id="data_{{ $item->id }}">
+                                                <label class="form-check-label" for="data_{{ $item->id }}">
+                                                    {{ $item->subdomain }}
+                                                </label>
+                                            </div>
+                                            @endforeach
+                                            <div class="form-group mt-3">
+                                                <button wire:click="store_novelty_type()" class="btn btn-success mt-3" >Crear Tipo de Novedad</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <!-- Modal para editar datos -->
                         <div wire:ignore.self class="modal fade" id="editDataModal" tabindex="-1" role="dialog" aria-labelledby="editDataModalLabel" aria-hidden="true">
@@ -138,6 +191,9 @@
                                     <div class="modal-body">
                                         <label for="editData">Nombre del Dato</label>
                                         <input type="text" id="editData" wire:model.defer="editingDataName" class="form-control">
+                                        @error('editingDataName')
+                                            <span class="text-danger" role="alert">{{$message}}</span>
+                                        @enderror
                                     </div>
                                     <div class="modal-footer">
                                         <button wire:click="updateData"  class="btn btn-success mt-3" >Guardar Cambios</button>
@@ -145,6 +201,31 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Modal para crear datos -->
+                        <div wire:ignore.self class="modal fade" id="createDataModal" tabindex="-1" role="dialog" aria-labelledby="createDataModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="createDataModalLabel">Crear Dato</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <label for="createData">Nombre del Dato</label>
+                                        <input type="text" id="createData" wire:model.defer="newDataName" class="form-control">
+                                        @error('newDataName')
+                                            <span class="text-danger" role="alert">{{$message}}</span>
+                                        @enderror
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button wire:click="store_data"  class="btn btn-success mt-3" >Crear Dato</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    
                     </div>                
                 </div> 
             </div>
@@ -162,14 +243,23 @@
         Livewire.on('show-edit-novelty-modal', () => {
             $('#editNoveltyModal').modal('show');
         });
+        Livewire.on('show-create-novelty-modal', () => {
+            $('#createNoveltyModal').modal('show');
+        });
 
         Livewire.on('show-edit-data-modal', () => {
             $('#editDataModal').modal('show');
         });
+        Livewire.on('show-create-data-modal', () => {
+            $('#createDataModal').modal('show');
+        });
+        
 
         Livewire.on('hide-modal', () => {
             $('#editNoveltyModal').modal('hide');
+            $('#createNoveltyModal').modal('hide');
             $('#editDataModal').modal('hide');
+            $('#createDataModal').modal('hide');            
         });
     });
 </script>
