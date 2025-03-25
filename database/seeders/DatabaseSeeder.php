@@ -23,6 +23,9 @@ class DatabaseSeeder extends Seeder
     $this->call([
         DomainSeeder::class, // Llama al seeder de dominios
     ]);
+    $this->call([
+        SubdomainSeeder::class, // Llama al seeder de subdominios
+    ]);
     
 }
 }

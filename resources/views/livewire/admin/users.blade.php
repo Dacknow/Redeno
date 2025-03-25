@@ -1,9 +1,9 @@
 <div>
     <div class="row">
         <div class="col-12 mb-4">
-            <div class="card-box height-100-p overflow-hidden">
-                <div class="profile-tab height-100-p">
-                    <div class="tab height-100-p">
+            <div class="card-box overflow-hidden">
+                <div class="profile-tab">
+                    <div class="tab">
                         <ul class="nav nav-tabs customtab" role="tablist">
                             <li class="nav-item">
                                 <a wire:click.prevent='selectTab("admins")' 
@@ -24,19 +24,17 @@
                         <div class="tab-content">
                             <!-- Listado de Administradores -->
                             <div class="tab-pane fade {{ $tab == 'admins' ? 'active show' : '' }}" id="admins" role="tabpanel">
-                                <div class="pd-20">
-                                    <div class="clearfix mb-20">            
-                                        <div class="pull-left">
-                                            <h4 class="text-blue h4">Listado de Administradores</h4>
-                                        </div>
-                                        <div class="pull-right">
-                                            <a href="{{ route('users.create-admin') }}"><i class="icon dw dw-add-user"></i></a>
-                                        </div>
+                                <div class="pd-20">            
+                                    <div class="pull-left">
+                                        <h4 class="text-blue h4">Listado de Administradores</h4>
+                                    </div>
+                                    <div class="pull-right">
+                                        <a href="{{ route('users.create-admin') }}"><i class="icon dw dw-add-user"></i></a>
                                     </div>
                                     
                                     <input wire:model.live="searchAdmin" id="search" type="text" class="form-control mb-3" placeholder="Ingrese el nombre o el correo de un usuario">
                                     @if($admins->count())
-                                    <table class="table table-striped table-responsive">
+                                    <table class="table table-striped">
                                         <thead>
                                             <tr>
                                                 <th>ID</th>

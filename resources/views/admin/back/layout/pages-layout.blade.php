@@ -29,6 +29,7 @@
 		<link rel="stylesheet" type="text/css" href="/back/vendors/styles/style.css" />
 		<link rel="stylesheet" href="/extra-assets/ijaboCropTool/ijaboCropTool.min.css">
 		<link rel="stylesheet" type="text/css" href="/back/vendors/styles/myStyles.css" />
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         @stack('stylesheet')
 	</head>
 	<body>
@@ -207,7 +208,7 @@
 							</a>
 						</li>
 						<li>
-							<a href="plantillas.html" class="dropdown-toggle no-arrow">
+							<a href="{{route('templates-page')}}" class="dropdown-toggle no-arrow">
 								<span class="micon fa fa-clone"></span>
 								<span class="mtext">Plantillas</span>
 							</a>

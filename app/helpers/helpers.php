@@ -2,6 +2,9 @@
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+use App\Models\Domain;
+
+
 
 /** funcion para enviar un correo usando la libreria PHPMAILER*/
 
@@ -34,5 +37,18 @@ if(!function_exists('sendEmail')){
     // funcion para llamar la imagen del logo
     function logo(){
         return asset('img/logo.png');
+    }
+}
+
+// funcion para traer el id del dominio por medio del nombre
+
+if(!function_exists('getDomainId')){
+    function getDomainId($domainName){
+        $domain = Domain::where('domain', $domainName)->first();
+        if($domain){
+            return $domain->id;
+        }else{
+            return null;
+        }
     }
 }

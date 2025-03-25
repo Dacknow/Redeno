@@ -1,0 +1,177 @@
+<div>    
+    <div class="row">
+        <x-form-alerts></x-form-alerts>
+        <div class="col-12 mb-4">
+            <div class="card-box overflow-hidden">
+                <div class="profile-tab">
+                    <div class="tab">
+                        <ul class="nav nav-tabs customtab">
+                            <li class="nav-item">
+                                <a wire:click.prevent="selectTab('novelty_types')"
+                                   class="nav-link {{ $tab == 'novelty_types' ? 'active' : '' }}"
+                                   href="#">Tipos de novedad</a>
+                            </li>
+                            <li class="nav-item">
+                                <a wire:click.prevent="selectTab('data')"
+                                   class="nav-link {{ $tab == 'data' ? 'active' : '' }}"
+                                   href="#">Datos</a>
+                            </li>
+                        </ul>
+    
+                        <div class="tab-content">
+                            <!-- Tipos de Novedad -->
+                            <div class="tab-pane fade {{ $tab == 'novelty_types' ? 'active show' : '' }}">
+                                <div class="pd-20">
+                                    <h4 class="text-blue h4">Tipos de Novedad</h4>
+                                    <input wire:model.live="searchNoveltyType" type="text" class="form-control mb-3" placeholder="Buscar...">
+    
+                                    @if($noveltyTypes->count())
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Tipo de Novedad</th>
+                                                    <th>Acción</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($noveltyTypes as $noveltyType)
+                                                    <tr>
+                                                        <td>{{ $noveltyType->id }}</td>
+                                                        <td>{{ $noveltyType->subdomain }}</td>
+                                                        <td>
+                                                            <button wire:click="editNoveltyType({{ $noveltyType->id }})"
+                                                                    class="btn btn-info btn-sm">
+                                                                Editar
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    @else
+                                        <strong>No hay registros</strong>
+                                    @endif
+                                </div>
+                            </div>
+    
+                            <!-- Datos -->
+                            <div class="tab-pane fade {{ $tab == 'data' ? 'active show' : '' }}">
+                                <div class="pd-20">
+                                    <h4 class="text-blue h4">Datos</h4>
+                                    <input wire:model.live="searchData" type="text" class="form-control mb-3" placeholder="Buscar...">
+    
+                                    @if($data->count())
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Dato</th>
+                                                    <th>Acción</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($data as $item)
+                                                    <tr>
+                                                        <td>{{ $item->id }}</td>
+                                                        <td>{{ $item->subdomain }}</td>
+                                                        <td>
+                                                            <button wire:click="edit_data({{$item->id}})"
+                                                                class="btn btn-info btn-sm">
+                                                                Editar
+                                                            </button>                                                            
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    @else
+                                        <strong>No hay registros</strong>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Modal para Editar Tipo de Novedad -->
+                        <div wire:ignore.self class="modal fade" id="editNoveltyModal" tabindex="-1" role="dialog" aria-labelledby="editNoveltyModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Editar Tipo de Novedad</h5>
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <input type="text" wire:model.defer="editingNoveltyTypeName" class="form-control mb-3">
+                                        
+                                        <!-- Selección de datos asociados con checkboxes -->
+                                        <label>Asociar Datos:</label>
+                                        <div class="form-group">
+                                            @foreach($dataModal as $item)
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" 
+                                                        wire:model="selectedData" 
+                                                        value="{{ $item->id }}" 
+                                                        id="data_{{ $item->id }}">
+                                                    <label class="form-check-label" for="data_{{ $item->id }}">
+                                                        {{ $item->subdomain }}
+                                                    </label>
+                                                </div>
+                                            @endforeach
+                                        </div>
+
+                                        <button wire:click="updateNoveltyType" class="btn btn-success mt-3">Guardar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>   
+
+
+                        <!-- Modal para editar datos -->
+                        <div wire:ignore.self class="modal fade" id="editDataModal" tabindex="-1" role="dialog" aria-labelledby="editDataModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="editDataModalLabel">Editar Dato</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <label for="editData">Nombre del Dato</label>
+                                        <input type="text" id="editData" wire:model.defer="editingDataName" class="form-control">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button wire:click="updateData"  class="btn btn-success mt-3" >Guardar Cambios</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                
+                </div> 
+            </div>
+        </div>
+    
+    
+        
+
+    </div>
+</div>
+
+@push('scripts')
+<script>
+    document.addEventListener('livewire:initialized', function () {
+        Livewire.on('show-edit-novelty-modal', () => {
+            $('#editNoveltyModal').modal('show');
+        });
+
+        Livewire.on('show-edit-data-modal', () => {
+            $('#editDataModal').modal('show');
+        });
+
+        Livewire.on('hide-modal', () => {
+            $('#editNoveltyModal').modal('hide');
+            $('#editDataModal').modal('hide');
+        });
+    });
+</script>
+@endpush
+

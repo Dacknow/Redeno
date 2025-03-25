@@ -49,6 +49,6 @@ class SubdomainSeeder extends Seeder
             ['subdomain' => 'Otro', 'domain_id' => 2],
         ];
 
-        DB::table('report_items')->insert($items);
+        DB::table('subdomains')->insert($items);
     }
 }

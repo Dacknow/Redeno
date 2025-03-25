@@ -8,6 +8,14 @@ use App\Http\Requests\UpdateSubdomainRequest;
 
 class SubdomainController extends Controller
 {
+
+    // funccion para mostrar las platillas
+    public function templatesPage(){
+        $data = [
+            'pageTitle' => 'Plantillas'
+        ];
+        return view('admin.back.pages.templates', $data);
+    }
     /**
      * Display a listing of the resource.
      */

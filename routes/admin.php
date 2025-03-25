@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\SubdomainController;
+
 Route::get('/', function () {
     return 'hello admin';
 });
@@ -38,6 +40,8 @@ Route::middleware('auth', 'preventBackHistory')->group(function () {
         Route::put('/users/update-admin/{admin}', 'updateAdmin')->name('users.update-admin');
         Route::get('/users/create-admin', 'createAdminForm')->name('users.create-admin');
         Route::post('/users/store-admin', 'storeAdmin')->name('users.store-admin');
-
+    });
+    Route::controller(SubdomainController::class)->group(function () {
+        Route::get('/templates', 'templatesPage')->name('templates-page');
     });
 });
