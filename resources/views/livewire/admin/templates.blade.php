@@ -43,12 +43,14 @@
                                                     <tr>
                                                         <td>{{ $noveltyType->id }}</td>
                                                         <td>{{ $noveltyType->subdomain }}</td>
-                                                        <td>
-                                                            <button wire:click="editNoveltyType({{ $noveltyType->id }})"
-                                                                    class="btn btn-info btn-sm">
-                                                                Editar
-                                                            </button>
-                                                        </td>
+                                                        <td>                                                            
+                                                            <a class="m-1" href="javascript:;" wire:click="editNoveltyType({{ $noveltyType->id }})">
+                                                                <i class="icon dw dw-edit2"></i>
+                                                            </a>
+                                                            <a wire:click="confirmDeleteNovelty({{ $noveltyType->id }}, '{{ $noveltyType->subdomain }}')" href="javascript:;" >
+                                                                <i class="icon dw dw-delete-3"></i>
+                                                            </a>                                                                                                            
+                                                        </td>                                                       
                                                     </tr>
                                                 @endforeach
                                             </tbody>
@@ -86,10 +88,12 @@
                                                         <td>{{ $item->id }}</td>
                                                         <td>{{ $item->subdomain }}</td>
                                                         <td>
-                                                            <button wire:click="edit_data({{$item->id}})"
-                                                                class="btn btn-info btn-sm">
-                                                                Editar
-                                                            </button>                                                            
+                                                            <a class="m-1" href="javascript:;" wire:click="edit_data({{$item->id}})">
+                                                                <i class="icon dw dw-edit2"></i>
+                                                            </a>
+                                                            <a class="m-1" href="javascript:;" wire:click="confirmDeleteData({{ $item->id }}, '{{ $item->subdomain }}')">
+                                                                <i class="icon dw dw-delete-3"></i>
+                                                            </a>
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -225,15 +229,55 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Modal de Confirmación de eliminacion de tipo de novedad-->
+                        <div wire:ignore.self class="modal fade" id="deleteNoveltyModal" tabindex="-1" role="dialog" aria-labelledby="deleteNoveltyModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-danger text-white">
+                                        <h5 class="modal-title" id="deleteNoveltyModalLabel">Confirmar Eliminación</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>¿Estás seguro de que deseas eliminar <strong>{{ $noveltyTypeNameToDelete }}</strong>?</p>
+                                        <p class="text-danger"><i class="icon dw dw-warning"></i> Esta acción no se puede deshacer.</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                        <button wire:click="deleteNoveltyType" data-dismiss="modal" class="btn btn-danger">Eliminar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal de Confirmación de eliminacion de dato-->
+                        <div wire:ignore.self class="modal fade" id="deleteDataModal" tabindex="-1" role="dialog" aria-labelledby="deleteDataModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-danger text-white">
+                                        <h5 class="modal-title" id="deleteDataModalLabel">Confirmar Eliminación</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>¿Estás seguro de que deseas eliminar <strong>{{ $dataNameToDelete }}</strong>?</p>
+                                        <p class="text-danger"><i class="icon dw dw-warning"></i> Esta acción no se puede deshacer.</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                        <button wire:click="deleteData" data-dismiss="modal" class="btn btn-danger">Eliminar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     
                     </div>                
                 </div> 
             </div>
         </div>
-    
-    
-        
-
     </div>
 </div>
 
@@ -253,13 +297,22 @@
         Livewire.on('show-create-data-modal', () => {
             $('#createDataModal').modal('show');
         });
+
+        Livewire.on('show-delete-modal-novelty', () => {
+            $('#deleteNoveltyModal').modal('show');
+        });
+        Livewire.on('show-delete-modal-data', () => {
+            $('#deleteDataModal').modal('show');
+        });
         
 
         Livewire.on('hide-modal', () => {
             $('#editNoveltyModal').modal('hide');
             $('#createNoveltyModal').modal('hide');
             $('#editDataModal').modal('hide');
-            $('#createDataModal').modal('hide');            
+            $('#createDataModal').modal('hide');
+            $('#deleteNoveltyModal').modal('hide');
+
         });
     });
 </script>
