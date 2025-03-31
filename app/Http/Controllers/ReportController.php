@@ -8,6 +8,13 @@ use App\Http\Requests\UpdateReportRequest;
 
 class ReportController extends Controller
 {
+    public function reportsPage(){
+        $data = [
+            'title' => 'Reportes',
+            'reports' => Report::all()
+        ];
+        return view('technician.back.pages.reports.reports', $data);
+    }
     /**
      * Display a listing of the resource.
      */

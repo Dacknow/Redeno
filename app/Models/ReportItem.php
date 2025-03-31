@@ -25,7 +25,7 @@ class ReportItem extends Model
      */
     public function report()
     {
-        return $this->belongsTo(Report::class);
+        return $this->belongsTo(Report::class, 'report_id');
     }
 
     /**
@@ -35,4 +35,5 @@ class ReportItem extends Model
     {
         return $this->belongsTo(Subdomain::class, 'item_id');
     }
+    
 }

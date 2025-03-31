@@ -20,6 +20,8 @@ class Report extends Model
         'novelty_type_id', // ID del tipo de novedad
         'description',   // Descripción del reporte
         'state_id',      // ID del estado del reporte
+        'admin_response', // Respuesta del administrador que gestiona
+        'completation_time',    // Fecha de finalización del reporte
     ];
 
     /**

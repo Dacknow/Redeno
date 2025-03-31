@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TechnicianController;
+use App\Http\Controllers\ReportController;
 
 Route::get('/', function () {
     return 'hello technician';
@@ -31,5 +32,9 @@ Route::middleware(['auth', 'preventBackHistory'])->group(function(){
         Route::post('/logout-handler', 'logoutHandler')->name('tLogout-handler');        
         Route::get('/profile', 'profileView')->name('tProfile');
         Route::post('/update-profile-picture', 'updateProfilePicture')->name('tUpdate_profile_picture');
+    });
+
+    Route::controller(ReportController::class)->group(function(){
+        Route::get('/reports', 'reportsPage')->name('reports');
     });
 });

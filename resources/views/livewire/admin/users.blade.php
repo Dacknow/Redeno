@@ -24,7 +24,8 @@
                         <div class="tab-content">
                             <!-- Listado de Administradores -->
                             <div class="tab-pane fade {{ $tab == 'admins' ? 'active show' : '' }}" id="admins" role="tabpanel">
-                                <div class="pd-20">            
+                                <div class="pd-20">
+                                    <x-form-alerts></x-form-alerts>           
                                     <div class="pull-left">
                                         <h4 class="text-blue h4">Listado de Administradores</h4>
                                     </div>

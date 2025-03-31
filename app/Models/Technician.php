@@ -61,6 +61,12 @@ class Technician extends Authenticatable
         return $this->hasMany(Notification::class);
     }
 
+    /**
+     *  relacion inversa con Reportes
+     */
+    public function reports(){
+        return $this->hasMany(Report::class);
+    }
     public function getPictureAttribute($value){
         return $value ? asset('images/users/technicians/'.$value) : asset('images/users/default-profile.png');
     }

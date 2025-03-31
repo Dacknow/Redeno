@@ -30,6 +30,7 @@
 		<link rel="stylesheet" href="/extra-assets/ijaboCropTool/ijaboCropTool.min.css">
 		<link rel="stylesheet" type="text/css" href="/back/vendors/styles/style.css" />
 		<link rel="stylesheet" type="text/css" href="/back/vendors/styles/myStyles.css" />
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         @stack('stylesheets')
 	</head>
 	<body>
@@ -202,7 +203,7 @@
 							</a>
 						</li>
 						<li>
-							<a href="invoice.html" class="dropdown-toggle no-arrow">
+							<a href="{{route('reports')}}" class="dropdown-toggle no-arrow {{Route::is('reports') ? 'active' : ''}}">
 								<span class="micon bi bi-receipt-cutoff"></span
 								><span class="mtext">Reportes</span>
 							</a>
