@@ -63,4 +63,13 @@ class Report extends Model
     {
         return $this->hasMany(ReportItem::class);
     }
+
+    /**
+     * Obtener las imagenes del reporte.
+     */
+    public function images()
+    {
+        return $this->hasMany(Image::class, 'report_id');
+    }
+
 }

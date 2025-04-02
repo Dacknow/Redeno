@@ -58,7 +58,7 @@
                 <div class="modal-body">                                                        
 
                     {{-- Formulario para crear reporte --}}
-                    <form wire:submit.prevent="storeReport">
+                    <form wire:submit.prevent="storeReport" enctype="multipart/form-data">
                         @csrf
 
                         {{-- Selección de tipo de novedad --}}
@@ -109,7 +109,28 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-                        
+
+                        <!-- Vista previa de imágenes antes de subirlas -->
+                        <div class="mt-2">
+                            @if ($photos)
+                                @foreach ($photos as $photo)
+                                    @if (str_starts_with($photo->getMimeType(), 'image/'))
+                                        <img src="{{ $photo->temporaryUrl() }}" width="100" class="m-2">
+                                    @endif
+                                @endforeach
+                            @endif
+                        </div>
+
+
+                        {{-- Cargar imagen --}}
+                        <div class="form-group">
+                            <label for="photos">Seleccione una a varias Imágenes (Opcional)</label>
+                            <input id="photos" type="file" wire:model="photos" class="form-control" multiple accept="image/*">
+                            <div wire:loading wire:target="photos">Subiendo...</div>
+                            @error('photos.*')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
 
                         {{-- Botón para enviar el formulario --}}
                         <div class="text-right">
@@ -128,7 +149,7 @@
    
     <!-- Modal de Detalles del Reporte -->
     <div wire:ignore.self class="modal fade" id="modal-report-detail" tabindex="-1" role="dialog" aria-labelledby="modal-report-detailLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog modal-md" role="document">
             <div class="modal-content">
                 
                 <!-- Header -->
@@ -158,6 +179,9 @@
                             @endforeach
                             <p><strong>Respuesta Administrador:</strong> {{ $selectedReport->admin_response ?? 'No proporcionada' }}</p>
                             <p><strong>Fecha de Finalización:</strong> {{ optional($selectedReport->completation_time)->format('d/m/Y H:i') }}</p>                            
+                            @foreach ($selectedReport->images as $image)
+                                <img src="{{ asset('storage/' . $image->image_url) }}" class="m-1" alt="Imagen del reporte" width="200">
+                            @endforeach
                         </div>
                     @else
                         <p>No se encontró el reporte.</p>
@@ -178,7 +202,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title" id="modal-delete-reportLabel">Confirmar Eliminación</h5>
+                    <h5 class="modal-title" id="modal-delete-reportLabel">Cancelar reporte</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>

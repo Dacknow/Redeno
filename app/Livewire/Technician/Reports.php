@@ -10,11 +10,17 @@ use App\Models\Subdomain;
 use App\Models\DataNoveltyType;
 use App\Models\ReportItem;
 use App\Models\Admin;
+use App\Models\Image;
 use Illuminate\Container\Attributes\Auth;
 use Illuminate\Support\Facades\DB;
+use Livewire\WithFileUploads; // Importante para manejar archivos en Livewire
+use Illuminate\Support\Facades\Storage;
 
 class Reports extends Component
 {
+    use WithFileUploads; // Importante para manejar archivos en Livewire
+
+    public $photos = []; // Almacena las imágenes temporalmente
     public $technician;
     public $selected_day;
     public $report_types;
@@ -61,12 +67,16 @@ class Reports extends Component
     {
         $this->validate([
             'reportTypeSelected' => 'required|exists:subdomains,id',
-            'adminSelected' => 'required|exists:admins,id',
+            'adminSelected' => 'required|exists:admins,id',            
+            'photos.*' => 'image|mimes:jpg,jpeg,png,gif|max:2048', // Solo imágenes
         ], [
             'reportTypeSelected.required' => 'El tipo de reporte es obligatorio.',
             'reportTypeSelected.exists' => 'El tipo de reporte seleccionado no existe.',
             'adminSelected.required' => 'El administrador es obligatorio.',
             'adminSelected.exists' => 'El administrador seleccionado no existe.',
+            'photos.*.image' => 'El archivo debe ser una imagen.',
+            'photos.*.mimes' => 'El archivo debe ser una imagen (JPG, JPEG, PNG, GIF).',
+            'photos.*.max' => 'La imagen no puede exceder los 2MB.',
         ]);
 
         DB::beginTransaction();
@@ -106,10 +116,27 @@ class Reports extends Component
                 ReportItem::insert($reportItems); // Inserción masiva optimizada
             }
 
+            
+
+            // Guardar imágenes
+            foreach ($this->photos as $photo) {
+                $path = 'images/reports/';
+                $filename = 'image_report_technician_' . uniqid() . '.' . $photo->extension();
+
+                // Almacenar la imagen en el disco 'public'
+                $photoPath = $photo->storeAs($path, $filename, 'public');
+
+                Image::create([
+                    'report_id' => $report->id,
+                    'image_url' => $photoPath, // Guardamos solo la ruta relativa
+                    'author' => 'technician', // 
+                ]);
+            }
+
             DB::commit();
 
             // Resetear formulario
-            $this->reset(['reportTypeSelected', 'adminSelected', 'form', 'description']);
+            $this->reset(['reportTypeSelected', 'adminSelected', 'form', 'description', 'photos']);
 
             // Cerrar modal y mostrar mensaje de éxito
             $this->dispatch('hide-modal');
