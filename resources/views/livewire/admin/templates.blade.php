@@ -4,7 +4,7 @@
             <div class="card-box overflow-hidden">
                 <div class="profile-tab">
                     <div class="tab">
-                        <ul class="nav nav-tabs customtab">
+                        <ul class="nav nav-tabs customtab" role="tablist">
                             <li class="nav-item">
                                 <a wire:click.prevent="selectTab('novelty_types')"
                                    class="nav-link {{ $tab == 'novelty_types' ? 'active' : '' }}"
@@ -22,7 +22,7 @@
                             <div class="tab-pane fade {{ $tab == 'novelty_types' ? 'active show' : '' }}">
                                 <div class="pd-20">
                                     <div class="pull-left">
-                                        <h4 class="text-blue h4">Tipos de Novedades</h4>
+                                        <h4 class="text-dark h4">Tipos de Novedades</h4>
                                     </div>
                                     <div class="pull-right">
                                         <a wire:click="create_novelty_type()"><i class="icon dw dw-add"></i></a>
@@ -66,7 +66,7 @@
                             <div class="tab-pane fade {{ $tab == 'data' ? 'active show' : '' }}">
                                 <div class="pd-20">
                                     <div class="pull-left">
-                                        <h4 class="text-blue h4">Datos</h4>
+                                        <h4 class="text-dark h4">Datos</h4>
                                     </div>
                                     <div class="pull-right">
                                         <a wire:click="create_data()"><i class="icon dw dw-add"></i></a>

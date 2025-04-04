@@ -6,7 +6,7 @@
     
     <div class="clearfix mb-20">
         <div class="pull-left">
-            <h4 class="text-blue h4">Editar Técnico</h4>
+            <h4 class="text-dark h4">Editar Técnico</h4>
         </div>
         <div class="pull-right">
             <a href="{{ route('users') }}?tab=technicians"><i class="icon dw dw-left-arrow2"></i></a>

@@ -4,7 +4,7 @@
 
 <div class="login-box bg-white box-shadow border-radius-10">
     <div class="login-title">
-        <h2 class="text-center text-primary">Crear Cuenta</h2>
+        <h2 class="text-center text-dark">Crear Cuenta</h2>
     </div>
     <form action="{{ route('tRegister-handler') }}" method="post">
         <x-form-alerts></x-form-alerts>        

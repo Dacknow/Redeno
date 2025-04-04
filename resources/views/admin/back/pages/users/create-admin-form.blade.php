@@ -8,7 +8,7 @@
     </div>
     <div class="clearfix">
         <div class="pull-left">
-            <h4 class="text-blue h4">Crear Administrador</h4>
+            <h4 class="text-dark h4">Crear Administrador</h4>
         </div>
     </div>
 

@@ -4,7 +4,7 @@
 
     <div class="login-box bg-white box-shadow border-radius-10">
         <div class="login-title">
-            <h2 class="text-center text-primary">Recuperar Contraseña</h2>
+            <h2 class="text-center text-dark">Recuperar Contraseña</h2>
         </div>
         <h6 class="mb-20">
             Ingrese su dirección de correo electrónico para restablecer su contraseña

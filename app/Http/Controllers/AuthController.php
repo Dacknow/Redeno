@@ -43,10 +43,10 @@ class AuthController extends Controller
                 'login_id'=>'required|email|exists:admins,email',
                 'password'=>'required|min:5|max:45'
             ],[
-                'login_id.required' => 'Se requiere nombre de usuario o correo electrónico',
-                'login_id.email' => 'Dirección de correo electrónico no válida',
+                'login_id.required' => 'Escriba su nombre de usuario o correo electrónico',
+                'login_id.email' => 'Dirección de correo electrónico inválido',
                 'login_id.exists' => 'El correo electrónico no existe en el sistema',
-                'password.required' => 'Se requiere contraseña'
+                'password.required' => 'Escriba su contraseña'
             ]);
         }else{
             $request->validate([
@@ -54,9 +54,9 @@ class AuthController extends Controller
                 'password'=>'required|min:5|max:45'
             
             ],[
-                'login_id.required'=>'username or email is required',
-                'login_id.exists'=>'user is not exists in system',
-                'password.required'=>'password is required'
+                'login_id.required'=>'Escriba su nombre de usuario o correo electrónico',
+                'login_id.exists'=>'El nombre de usuario no no existe en el sistema',
+                'password.required'=>'Escriba su contraseña'
             ]);
         }
 
@@ -91,7 +91,7 @@ class AuthController extends Controller
             }
             
         }else{
-            session()->flash('fail','Incorrect Credentials');
+            session()->flash('fail','Credenciales Incorrectas');
             return redirect()-> route('login');
         }
     }
@@ -104,10 +104,10 @@ class AuthController extends Controller
                 'login_id'=>'required|email|exists:technicians,email',
                 'password'=>'required|min:5|max:45'
             ],[
-                'login_id.required'=>'username or email is required',
-                'login_id.email'=>'invalid email address',
-                'login_id.exists'=>'email is not exists in system',
-                'password.required'=>'password is required'
+                'login_id.required'=>'Escriba su Nombre de Usuario o Correo electrónico',
+                'login_id.email'=>'Correo Electrónico Inválido',
+                'login_id.exists'=>'Usuario no existe en el  sistema',
+                'password.required'=>'Escriba su Contraseña'
             ]);
         }else{
             $request->validate([
@@ -115,9 +115,9 @@ class AuthController extends Controller
                 'password'=>'required|min:5|max:45'
             
             ],[
-                'login_id.required'=>'username or email is required',
-                'login_id.exists'=>'user is not exists in system',
-                'password.required'=>'password is required'
+                'login_id.required'=>'Escriba su Nombre de Usuario o Correo electrónico',
+                'login_id.exists'=>'Usuario no existe en el  sistema',
+                'password.required'=>'Escriba su Contraseña'
             ]);
         }
 
@@ -149,7 +149,7 @@ class AuthController extends Controller
                 return redirect()-> route('home');
             }
         }else{
-            session()->flash('fail','Incorrect Credentials ');
+            session()->flash('fail','Credenciales Incorrectas');
             return redirect()-> route('tLogin');
         }
     }

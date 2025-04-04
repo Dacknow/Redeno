@@ -1,7 +1,7 @@
 <div>
     <div class="pd-20 card-box overflow-hidden">
         <div class="d-flex justify-content-between align-items-center">
-            <h4 class="text-blue h4">Generar Reporte</h4>
+            <h4 class="text-dark h4">Generar Reporte</h4>
             <a href="javascript:;" wire:click="createReport">
                 <i class="icon dw dw-add"></i>
             </a>

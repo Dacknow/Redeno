@@ -73,3 +73,75 @@ input:checked + .slider:before {
     background-color: red;
 }
 
+/* Estilo del contenedor con fondo futurista */
+.welcome-container {
+    background: url('/images/site/welcome/home.jpg') no-repeat center center;
+    background-size: cover;
+    position: relative;
+}
+
+.pd-0 {
+    padding: 0 !important;
+}
+
+/* Tarjeta de bienvenida con efecto futurista */
+.welcome-card {
+    position: relative;
+    background: rgba(2, 99, 160, 0.15);
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(2, 99, 160, 0.5);
+    border: 1px solid rgba(2, 99, 160, 0.7);
+}
+
+/* Estilos del título */
+.welcome-title {
+    font-size: 32px;
+    font-weight: bold;
+    color: #ffffff;
+    text-shadow: 0px 0px 10px rgba(2, 99, 160, 0.8);
+}
+
+/* Texto de bienvenida */
+.welcome-text {
+    font-size: 18px;
+    color: #e0f7ff;
+    margin-bottom: 20px;
+}
+
+/* Botón futurista */
+.btn-custom {
+    background: linear-gradient(45deg, #0263a0, #0284d0);
+    color: white;
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: 0.3s;
+    box-shadow: 0 0 10px rgba(2, 99, 160, 0.6);
+    border: none;
+}
+
+.btn-custom:hover {
+    background: linear-gradient(45deg, #0284d0, #0263a0);
+    box-shadow: 0 0 20px rgba(2, 99, 160, 0.9);
+    transform: scale(1.05);
+}
+
+/* Contenedor de login */
+.container-login {
+    background: url('/images/site/welcome/login.jpg') no-repeat center center;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    position: relative;
+}
+
+.login-header-technician {
+    background: #000;
+}
+
+

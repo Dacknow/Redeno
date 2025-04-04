@@ -208,7 +208,7 @@
 							</a>
 						</li>
 						<li>
-							<a href="{{route('templates-page')}}" class="dropdown-toggle no-arrow">
+							<a href="{{route('templates-page')}}" class="dropdown-toggle no-arrow {{Route::is('templates-page') ? 'active' : ''}}">
 								<span class="micon fa fa-clone"></span>
 								<span class="mtext">Plantillas</span>
 							</a>

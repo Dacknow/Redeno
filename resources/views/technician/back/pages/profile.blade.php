@@ -2,8 +2,15 @@
 @section('pageTitle', isset($pageTitle) ? $pageTitle : 'Perfil')
 @section('content')
 
+<div class="main-container">
+  <div class="pd-ltr-20 xs-pd-20-10">
+    <div class="min-height-200px">
+      @livewire('technician.profile')
+    </div>
+  </div>
+</div>
 
-@livewire('technician.profile')
+
 
 @endsection
 @push('scripts')

@@ -3,7 +3,7 @@
 @section('content')
 <div class="login-box bg-white box-shadow border-radius-10">
     <div class="login-title">
-        <h2 class="text-center text-primary">Técnico</h2>
+        <h2 class="text-center text-dark">Técnico</h2>
     </div>
     <form action="{{route('tLogin-handler')}}" method="POST">
 

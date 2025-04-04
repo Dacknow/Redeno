@@ -27,7 +27,7 @@
                                 <div class="pd-20">
                                     <x-form-alerts></x-form-alerts>           
                                     <div class="pull-left">
-                                        <h4 class="text-blue h4">Listado de Administradores</h4>
+                                        <h4 class="text-dark h4">Listado de Administradores</h4>
                                     </div>
                                     <div class="pull-right">
                                         <a href="{{ route('users.create-admin') }}"><i class="icon dw dw-add-user"></i></a>
@@ -71,10 +71,9 @@
                             <!-- Listado de Técnicos -->
                             <div class="tab-pane fade {{ $tab == 'technicians' ? 'active show' : '' }}" id="technicians" role="tabpanel">
                                 <div class="pd-20">
-                                    <div class="clearfix mb-20">            
-                                        <div class="pull-left">
-                                            <h4 class="text-blue h4">Listado de Técnicos</h4>
-                                        </div>
+                                    <x-form-alerts></x-form-alerts>           
+                                    <div class="pull-left">
+                                        <h4 class="text-dark h4">Listado de Técnicos</h4>
                                     </div>
                                     
                                     <input wire:model.live="searchTechnician" id="search" type="text" class="form-control mb-3" placeholder="Ingrese el nombre, correo o número de cédula de un usuario ">

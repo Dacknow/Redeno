@@ -237,16 +237,10 @@
 		</div>
 		<div class="mobile-menu-overlay"></div>
 
-		<div class="main-container">
-			<div class="pd-ltr-20 xs-pd-20-10">
-				<div class="min-height-200px">
-					
-					
-                        @yield('content')
-                    
-				</div>				
-			</div>
-		</div>
+		
+		@yield('content')
+
+
 		<!-- js -->
 		<script src="/back/vendors/scripts/core.js"></script>
 		<script src="/back/vendors/scripts/script.min.js"></script>
