@@ -142,6 +142,9 @@ class Reports extends Component
             $this->dispatch('hide-modal');
             $this->dispatch('success', '¡Reporte creado exitosamente!');
 
+            // actualizar lista de reportes en ManageReports
+            $this->dispatch('load-reports', '$refresh');
+
         } catch (\Exception $e) {
             DB::rollBack();
             $this->dispatch('error', 'Error al crear el reporte: ' . $e->getMessage());
@@ -187,7 +190,7 @@ class Reports extends Component
             $query->whereHas('reportTypeRoles', function ($subQuery) {
                 $subQuery->where('novelty_type_id', $this->reportTypeSelected);
             });
-        })->get();
+        })->where('is_available', 1)->get();
 
         return view('livewire.technician.reports');
     }

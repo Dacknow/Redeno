@@ -11,7 +11,7 @@
         </div>
     
         {{-- Contenedor de reportes en tarjetas --}}
-        <div class="row">
+        <div class="row" wire:poll.30s>
             @forelse($reports as $report)
                 <div class="col-md-6 mb-3">
                     <div class="card shadow-sm">
@@ -57,7 +57,7 @@
                 <div class="modal-body">
                     @if($selectedReport)
                         <div class="container">
-                            <p><strong>ID:</strong> {{ $selectedReport->id }}</p>
+                            <p><strong>ID Reporte:</strong> {{ $selectedReport->id }}</p>
                             <p><strong>Técnico:</strong> {{ $selectedReport->technician->name ?? 'No disponible' }}</p>
                             <p><strong>Cédula:</strong> {{ $selectedReport->technician->identification ?? 'No disponible' }}</p>
                             <p><strong>Télefono:</strong> {{ $selectedReport->technician->celphone ?? 'No disponible' }}</p>

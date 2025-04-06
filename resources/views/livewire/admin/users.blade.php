@@ -38,7 +38,7 @@
                                     <table class="table table-striped">
                                         <thead>
                                             <tr>
-                                                <th>ID</th>
+                                                <th>Foto Perfil</th>
                                                 <th>Nombre</th>
                                                 <th>Email</th>
                                                 <th>Nombre de Usuario</th>
@@ -48,7 +48,14 @@
                                         <tbody>
                                             @foreach($admins as $admin)
                                                 <tr>
-                                                    <td>{{ $admin->id }}</td>
+                                                    <td>
+                                                        <span class="user-icon">
+                                                            <img src="{{$admin->picture}}" alt="" class="profile-img"/>
+                                                            <span id="statusIndicator" class="status-indicator {{ $admin->is_available ? 'online' : 'offline' }}">
+                                                                <i class="dw {{ $admin->is_available ? 'dw-checkmark-circle' : 'dw-minus-circle' }}"></i>
+                                                            </span> 
+                                                        </span>
+                                                    </td>
                                                     <td>{{ $admin->name }}</td>
                                                     <td>{{ $admin->email }}</td>
                                                     <td>{{ $admin->username }}</td>
@@ -80,10 +87,10 @@
 
                                     @if($technicians->count())
 
-                                    <table class="table table-striped table-responsive">
+                                    <table class="table table-striped">
                                         <thead>
                                             <tr>
-                                                <th>ID</th>
+                                                <th>Foto Perfil</th>
                                                 <th>Nombre</th>
                                                 <th>Email</th>
                                                 <th>Nombre de Usuario</th>
@@ -96,7 +103,11 @@
                                         <tbody>
                                             @foreach($technicians as $technician)
                                                 <tr>
-                                                    <td>{{ $technician->id }}</td>
+                                                    <td>
+                                                        <span class="user-icon">
+                                                            <img src="{{$technician->picture}}" alt="" class="profile-img"/> 
+                                                        </span>
+                                                    </td>
                                                     <td>{{ $technician->name }}</td>
                                                     <td>{{ $technician->email }}</td>
                                                     <td>{{ $technician->username }}</td>

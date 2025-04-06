@@ -66,7 +66,8 @@ class ManageReports extends Component
     public function changeState($reportId){
         $this->selectedReport = Report::findOrFail($reportId);
         $stateP = getSubdomainId('Pendiente');
-        $stateE = getSubdomainId('En Gestión');
+        $stateG = getSubdomainId('En Gestión');
+        $stateE = getSubdomainId('Escalado');
 
         if($this->selectedReport->state_id == $stateP){
             $newState = getSubdomainId('En Gestión');
@@ -75,7 +76,7 @@ class ManageReports extends Component
             $this->selectedReport->save();
             $this->selectedReport = null;
             $this->dispatch('success', '!Cambio de estado a En Gestión!');
-        }elseif($this->selectedReport->state_id == $stateE){
+        }elseif($this->selectedReport->state_id == $stateG || $this->selectedReport->state_id == $stateE){
             
             $this->dispatch('show-modal-report-response');
         }
@@ -105,6 +106,13 @@ class ManageReports extends Component
             }
         
             $report = Report::findOrFail($this->selectedReport->id);
+
+            $state = Subdomain::findOrFail($this->reportStateSelected);
+            if($state->subdomain == 'Escalado'){
+                $admin = Admin::role('Coordinador')->first();
+                $this->adminResponse = $this->adminResponse.' ¡¡¡ Escalado por '.$report->manager->name.' !!!';
+                $report->manager_id = $admin->id;                
+            }
         
             $report->admin_response = $this->adminResponse;
             $report->state_id = $this->reportStateSelected;
@@ -127,7 +135,7 @@ class ManageReports extends Component
 
 
     public function render()
-    {
+    {        
         // Usar carga diferida para evitar consultas innecesarias
         $this->reports = $this->admin->reports()
             ->with(['state', 'noveltyType']) // para evitar múltiples consultas
