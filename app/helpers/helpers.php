@@ -3,6 +3,7 @@
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use App\Models\Domain;
+use App\Models\Subdomain;
 
 
 
@@ -48,6 +49,19 @@ if(!function_exists('getDomainId')){
         if($domain){
             return $domain->id;
         }else{
+            return null;
+        }
+    }
+}
+
+// funcion para traer el id del subdominio por medio del nombre
+
+if(!function_exists('getSubdomainId')){
+    function getSubdomainId($subdomainName){
+        $subdomain = Subdomain::where('subdomain', $subdomainName)->first();
+        if($subdomain){
+            return $subdomain->id;
+        } else{
             return null;
         }
     }

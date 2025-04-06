@@ -202,7 +202,7 @@
 							</a>
 						</li>
 						<li>
-							<a href="reportes.html" class="dropdown-toggle no-arrow">
+							<a href="{{route('manage-reports')}}" class="dropdown-toggle no-arrow {{Route::is('manage-reports') ? 'active' : ''}}">
 								<span class="micon fa fa-warning"></span>
 								<span class="mtext">Reportes</span>
 							</a>

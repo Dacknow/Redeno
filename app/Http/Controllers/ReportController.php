@@ -11,10 +11,17 @@ class ReportController extends Controller
     public function reportsPage(){
         $data = [
             'title' => 'Reportes',
-            'reports' => Report::all()
         ];
-        return view('technician.back.pages.reports.reports', $data);
+        return view('technician.back.pages.reports', $data);
     }
+
+    // administrar reporte pagina
+    public function manageReportPage(){
+        $data = [
+            'title' => 'Administrar Reportes'
+        ];
+        return view('admin.back.pages.manage-reports', $data);
+    } 
     /**
      * Display a listing of the resource.
      */

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SubdomainController;
 
 Route::get('/', function () {
@@ -44,4 +45,6 @@ Route::middleware('auth', 'preventBackHistory')->group(function () {
     Route::controller(SubdomainController::class)->group(function () {
         Route::get('/templates', 'templatesPage')->name('templates-page');
     });
+
+    Route::get('/manage-reports', [ReportController::class, 'manageReportPage'])->name('manage-reports');
 });

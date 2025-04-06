@@ -62,6 +62,12 @@ class Admin extends Authenticatable
         return $this->hasMany(Notification::class);
     }
 
+    // relacion inversa con reportes
+
+    public function reports(){
+        return $this->hasMany(Report::class, 'manager_id');
+    }
+
     public function getPictureAttribute($value){
         return $value ? asset('images/users/admins/'.$value) : asset('images/users/default-profile.png');
     }

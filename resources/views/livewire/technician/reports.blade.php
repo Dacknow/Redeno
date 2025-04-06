@@ -172,13 +172,13 @@
                                     {{ $selectedReport->state->subdomain ?? 'Desconocido' }}
                                 </span>
                             </p>
-                            <p><strong>Fecha de Creación:</strong> {{ optional($selectedReport->created_at)->format('d/m/Y H:i') }}</p>
                             <p><strong>Descripción:</strong> {{ $selectedReport->description ?? 'No proporcionada' }}</p>
                             @foreach($selectedReport->items ?? [] as $item)
                                 <p><strong>{{ $item->item->subdomain ?? 'Desconocido' }}:</strong> {{ $item->value ?? 'N/A' }}</p>
                             @endforeach
                             <p><strong>Respuesta Administrador:</strong> {{ $selectedReport->admin_response ?? 'No proporcionada' }}</p>
-                            <p><strong>Fecha de Finalización:</strong> {{ optional($selectedReport->completation_time)->format('d/m/Y H:i') }}</p>                            
+                            <p><strong>Fecha de Creación:</strong> {{$selectedReport->created_at }}</p>
+                            <p><strong>Fecha de Finalización:</strong> {{$selectedReport->completation_time}}</p>                            
                             @foreach ($selectedReport->images as $image)
                                 <img src="{{ asset('storage/' . $image->image_url) }}" class="m-1" alt="Imagen del reporte" width="200">
                             @endforeach
@@ -222,7 +222,7 @@
 
 @push('scripts')
 <script>      
-    // Emitir evento desde el modal del calendario para seleccionar una fecha
+    
     document.addEventListener('livewire:initialized', function () {
         Livewire.on('show-modal-create-report', () => {
             $('#modal-create-report').modal('show');
