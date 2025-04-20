@@ -145,3 +145,54 @@ input:checked + .slider:before {
 }
 
 
+.notification-btn {
+    position: relative;
+    display: inline-block;
+    color: #212529;
+}
+
+.notification-active {
+    position: absolute;
+    top: -6px;
+    right: 7px;
+    font-size: 11px;
+    padding: 3px 7px;
+    border-radius: 50%;
+    background-color: red;
+    color: white;
+}
+
+.badgeMe {
+    position: relative;
+    top: -13px;
+}
+
+/* Nuevos estilos para adaptarse al tema oscuro */
+.header-dark .notification-btn {
+    color: #ffffff !important; /* Fuerza color blanco en modo oscuro */
+}
+
+.header-dark .notification-btn .icon {
+    color: inherit; /* Hereda el color del botón */
+}
+
+/* Mantiene el rojo para notificaciones activas */
+.header-dark .notification-btn .text-danger {
+    color: #ff4d4d !important;
+}
+
+/* Estilos para el contenedor en modo oscuro */
+.header-dark .notification-container .btn {
+    color: #ffffff;
+}
+/* Estilos para el contenedor en modo oscuro */
+.header-dark .theme-container .btn {
+    color: #ffffff;
+}
+
+/* Transición suave para el cambio de tema */
+.notification-btn, .notification-btn .icon {
+    transition: color 0.3s ease;
+}
+
+

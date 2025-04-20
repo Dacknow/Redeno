@@ -20,7 +20,7 @@ class Authenticate
         if(!$request->expectsJson()) {
             if(str_starts_with(request()->route()->getPrefix(), 'admin')){
                 if(!Auth::guard('admin')->check()){
-                    session()->flash('fail', 'you must login first');
+                    session()->flash('fail', 'Debes iniciar sesión primero');
                     return redirect()->route('login'); 
                 }
                     
@@ -28,7 +28,7 @@ class Authenticate
 
             if(str_starts_with(request()->route()->getPrefix(), 'technician')){                
                 if(!Auth::guard('technician')->check()){
-                    session()->flash('fail', 'you must login first');
+                    session()->flash('fail', 'Debes iniciar sesión primero');
                     return redirect()->route('tLogin'); 
                 }
             }

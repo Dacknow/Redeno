@@ -38,11 +38,11 @@
 			<div class="header-left">
 				<div class="menu-icon bi bi-list"></div>				
 			</div>
-			<div class="header-right">
-				<div class="dashboard-setting user-notification">
+			<div class="header-right theme-container">
+				<div class="dashboard-setting py-3">
 					<div class="dropdown">
 						<a
-							class="dropdown-toggle no-arrow"
+							class="btn dropdown-toggle no-arrow"
 							href="javascript:;"
 							data-toggle="right-sidebar"
 						>							
@@ -51,92 +51,13 @@
 						</a>
 					</div>
 				</div>
-				<div class="user-notification">
-					<div class="dropdown">
-						<a
-							class="dropdown-toggle no-arrow"
-							href="#"
-							role="button"
-							data-toggle="dropdown"
-						>
-							<i class="icon-copy dw dw-notification"></i>
-							<span class="badge notification-active"></span>
-						</a>
-						<div class="dropdown-menu dropdown-menu-right">
-							<div class="notification-list mx-h-350 customscroll">
-								<ul>
-									<li>
-										<a href="#">
-											<img src="/back/vendors/images/img.jpg" alt="" />
-											<h3>John Doe</h3>
-											<p>
-												Lorem ipsum dolor sit amet, consectetur adipisicing
-												elit, sed...
-											</p>
-										</a>
-									</li>
-									<li>
-										<a href="#">
-											<img src="/back/vendors/images/photo1.jpg" alt="" />
-											<h3>Lea R. Frith</h3>
-											<p>
-												Lorem ipsum dolor sit amet, consectetur adipisicing
-												elit, sed...
-											</p>
-										</a>
-									</li>
-									<li>
-										<a href="#">
-											<img src="/back/vendors/images/photo2.jpg" alt="" />
-											<h3>Erik L. Richards</h3>
-											<p>
-												Lorem ipsum dolor sit amet, consectetur adipisicing
-												elit, sed...
-											</p>
-										</a>
-									</li>
-									<li>
-										<a href="#">
-											<img src="/back/vendors/images/photo3.jpg" alt="" />
-											<h3>John Doe</h3>
-											<p>
-												Lorem ipsum dolor sit amet, consectetur adipisicing
-												elit, sed...
-											</p>
-										</a>
-									</li>
-									<li>
-										<a href="#">
-											<img src="/back/vendors/images/photo4.jpg" alt="" />
-											<h3>Renee I. Hansen</h3>
-											<p>
-												Lorem ipsum dolor sit amet, consectetur adipisicing
-												elit, sed...
-											</p>
-										</a>
-									</li>
-									<li>
-										<a href="#">
-											<img src="/back/vendors/images/img.jpg" alt="" />
-											<h3>Vicki M. Coleman</h3>
-											<p>
-												Lorem ipsum dolor sit amet, consectetur adipisicing
-												elit, sed...
-											</p>
-										</a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-				</div>
 				@livewire('technician.top-technician-info')
 			</div>
 		</div>
 
 		<div class="right-sidebar">
 			<div class="sidebar-title">
-				<h3 class="weight-600 font-16 text-blue">
+				<h3 class="weight-600 font-16 text-dark">
 					Configuración
 					<span class="btn-block font-weight-400 font-12"
 						>Color de Interfaz</span
@@ -152,12 +73,12 @@
 					<div class="sidebar-btn-group pb-30 mb-10">
 						<a
 							href="javascript:void(0);"
-							class="btn btn-outline-primary header-white active"
+							class="btn btn-outline-secondary header-white "
 							>Claro</a
 						>
 						<a
 							href="javascript:void(0);"
-							class="btn btn-outline-primary header-dark"
+							class="btn btn-outline-secondary header-dark active"
 							>Oscuro</a
 						>
 					</div>
@@ -166,12 +87,12 @@
 					<div class="sidebar-btn-group pb-30 mb-10">
 						<a
 							href="javascript:void(0);"
-							class="btn btn-outline-primary sidebar-light"
+							class="btn btn-outline-secondary sidebar-light"
 							>Claro</a
 						>
 						<a
 							href="javascript:void(0);"
-							class="btn btn-outline-primary sidebar-dark active"
+							class="btn btn-outline-secondary sidebar-dark active"
 							>Oscuro</a
 						>
 					</div>

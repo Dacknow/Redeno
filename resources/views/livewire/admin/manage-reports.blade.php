@@ -11,7 +11,7 @@
         </div>
     
         {{-- Contenedor de reportes en tarjetas --}}
-        <div class="row" wire:poll.30s>
+        <div class="row" wire:poll.15s>
             @forelse($reports as $report)
                 <div class="col-md-6 mb-3">
                     <div class="card shadow-sm">

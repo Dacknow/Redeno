@@ -63,75 +63,75 @@ class ManageReports extends Component
         };
     }
 
-    public function changeState($reportId){
-        $this->selectedReport = Report::findOrFail($reportId);
-        $stateP = getSubdomainId('Pendiente');
-        $stateG = getSubdomainId('En Gestión');
-        $stateE = getSubdomainId('Escalado');
+    protected function resetForm()
+    {
+        $this->adminResponse = '';
+        $this->reportStateSelected = null;
+        $this->selectedReport = null;
+    }
 
-        if($this->selectedReport->state_id == $stateP){
-            $newState = getSubdomainId('En Gestión');
-            $this->selectedReport->state_id = $newState;
-            
-            $this->selectedReport->save();
-            $this->selectedReport = null;
-            $this->dispatch('success', '!Cambio de estado a En Gestión!');
-        }elseif($this->selectedReport->state_id == $stateG || $this->selectedReport->state_id == $stateE){
-            
+    protected function resetSelectedReport()
+    {
+        $this->selectedReport = null;
+    }
+
+
+    public function changeState($reportId)
+    {
+        $report = Report::findOrFail($reportId);
+        $pending = getSubdomainId('Pendiente');
+        $inProgress = getSubdomainId('En Gestión');
+        $escalated = getSubdomainId('Escalado');
+    
+        if ($report->state_id === $pending) {
+            $report->update(['state_id' => $inProgress]);
+            $this->dispatch('success', '!Cambió de estado a En Gestión!');
+            $this->resetSelectedReport();
+        } elseif (in_array($report->state_id, [$inProgress, $escalated])) {
+            $this->selectedReport = $report;
             $this->dispatch('show-modal-report-response');
         }
-
-        
     }
-
-    public function sendResponse(){
-        {
-            
-            $this->validate([
-                'adminResponse' => 'required|string|min:3',
-                'reportStateSelected' => 'required|exists:subdomains,id',
-            ],[
-                'adminResponse.required' => 'La respuesta es requerida.',
-                'adminResponse.string' => 'La respuesta debe ser una cadena de texto.',
-                'adminResponse.min' => 'La respuesta debe tener al menos 3 caracteres.',
-                'reportStateSelected.required' => 'El estado del reporte es requerido.',
-                'reportStateSelected.exists' => 'El estado del reporte seleccionado no existe.',
- 
-            ]);
-        
-            
-            if (!$this->selectedReport) {
-                $this->dispatch('error', 'No se encontró el reporte.');
-                return;
-            }
-        
-            $report = Report::findOrFail($this->selectedReport->id);
-
-            $state = Subdomain::findOrFail($this->reportStateSelected);
-            if($state->subdomain == 'Escalado'){
-                $admin = Admin::role('Coordinador')->first();
-                $this->adminResponse = $this->adminResponse.' ¡¡¡ Escalado por '.$report->manager->name.' !!!';
-                $report->manager_id = $admin->id;                
-            }
-        
-            $report->admin_response = $this->adminResponse;
-            $report->state_id = $this->reportStateSelected;
-            $report->completation_time = Carbon::now();
-            $report->save();
-            
-            $this->dispatch('$refresh'); // Actualizar la lista de reportes
-
-        
-            // Limpiar los datos del formulario
-            $this->adminResponse = '';
-            $this->reportStateSelected = null;
-            $this->selectedReport = null;
-        
-            // Cerrar el modal
-            $this->dispatch('hide-modal');
-            $this->dispatch('success', '¡Respuesta guardada exitosamente!');
+    
+    public function sendResponse()
+    {
+        $this->validate([
+            'adminResponse' => 'required|string|min:3',
+            'reportStateSelected' => 'required|exists:subdomains,id',
+        ], [
+            'adminResponse.required' => 'La respuesta es requerida.',
+            'adminResponse.string' => 'La respuesta debe ser una cadena de texto.',
+            'adminResponse.min' => 'La respuesta debe tener al menos 3 caracteres.',
+            'reportStateSelected.required' => 'El estado del reporte es requerido.',
+            'reportStateSelected.exists' => 'El estado del reporte seleccionado no existe.',
+        ]);
+    
+        if (!$this->selectedReport) {
+            $this->dispatch('error', 'No se encontró el reporte.');
+            return;
         }
+    
+        $report = Report::findOrFail($this->selectedReport->id);
+        $state = Subdomain::findOrFail($this->reportStateSelected);
+    
+        if ($state->subdomain === 'Escalado') {
+            $coordinator = Admin::role('Coordinador')->first();
+            $this->adminResponse .= ' ¡¡¡ Escalado por ' . optional($report->manager)->name . ' !!!';
+            $report->manager_id = optional($coordinator)->id;
+        }
+    
+        $report->update([
+            'admin_response' => $this->adminResponse,
+            'state_id' => $this->reportStateSelected,
+            'completation_time' => now(),
+        ]);
+    
+        $this->dispatch('$refresh'); // Actualizar la lista de reportes
+        $this->resetForm();
+        $this->dispatch('hide-modal');
+        $this->dispatch('success', '¡Respuesta guardada exitosamente!');
     }
+    
 
 
     public function render()
