@@ -79,6 +79,11 @@ input:checked + .slider:before {
     background-size: cover;
     position: relative;
 }
+.dashboard-container {
+    background: url('/images/site/welcome/dashboard.jpg') no-repeat center center;
+    background-size: cover;
+    position: relative;
+}
 
 .pd-0 {
     padding: 0 !important;

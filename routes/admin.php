@@ -34,17 +34,16 @@ Route::middleware('auth', 'preventBackHistory')->group(function () {
         Route::post('/logout-handler', 'logoutHandler')->name('logout-handler');
         Route::get('/profile', 'profileView')->name('profile');
         Route::post('/update-profile-picture', 'updateProfilePicture')->name('update_profile_picture');
-        Route::get('/users', 'usersPage')->name('users');
-        Route::get('/users/edit-technician/{technician}', 'editTechnicianForm')->name('users.edit-technician');
+        Route::get('/users', 'usersPage')->middleware('permission:users,admin')->name('users');
+        Route::get('/users/edit-technician/{technician}', 'editTechnicianForm')->middleware('permission:users.edit-technician,admin')->name('users.edit-technician');
         Route::put('/users/update-technician/{technician}', 'updateTechnician')->name('users.update-technician');
-        Route::get('/users/edit-admin/{admin}', 'editAdminForm')->name('users.edit-admin');
+        Route::get('/users/edit-admin/{admin}', 'editAdminForm')->middleware('permission:users.edit-admin,admin')->name('users.edit-admin');
         Route::put('/users/update-admin/{admin}', 'updateAdmin')->name('users.update-admin');
-        Route::get('/users/create-admin', 'createAdminForm')->name('users.create-admin');
+        Route::get('/users/create-admin', 'createAdminForm')->middleware('permission:users.create-admin,admin')->name('users.create-admin');
         Route::post('/users/store-admin', 'storeAdmin')->name('users.store-admin');
     });
-    Route::controller(SubdomainController::class)->group(function () {
-        Route::get('/templates', 'templatesPage')->name('templates-page');
-    });
-
-    Route::get('/manage-reports', [ReportController::class, 'manageReportPage'])->name('manage-reports');
+    
+    Route::get('/templates', [SubdomainController::class,'templatesPage'])->middleware('permission:templates-page,admin')->name('templates-page');
+    
+    Route::get('/manage-reports', [ReportController::class,'manageReportPage'])->middleware('permission:manage-reports,admin')->name('manage-reports');    
 });

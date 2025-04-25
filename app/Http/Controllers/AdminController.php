@@ -13,7 +13,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\File;
-
+use Illuminate\Validation\Rules\Exists;
+use Spatie\Permission\Models\Role;
 
 class AdminController extends Controller
 {
@@ -279,9 +280,12 @@ class AdminController extends Controller
     }
 
     public function editAdminForm(Admin $admin){
+        $roles = Role::all();
+        $admin->load('roles'); // Para poder marcar los checkboxes
         $data = [
             'pageTitle' => 'Editar Administrador',
-            'admin' => $admin
+            'admin' => $admin,
+            'roles' => $roles
         ];
         return view('admin.back.pages.users.edit-admin-form', $data);
     }
@@ -290,8 +294,11 @@ class AdminController extends Controller
     {
         $request->validate([
             'name' => 'required|min:2|max:44',
-            'username' => 'required|min:2|max:44|unique:admins,username,'.$admin->id,
-            'email' => 'required|email|max:149|unique:admins,email,'.$admin->id     
+            'username' => 'required|min:2|max:44|unique:admins,username,' . $admin->id,
+            'email' => 'required|email|max:149|unique:admins,email,' . $admin->id,
+            'state' => 'required|in:0,1',
+            'roles' => 'required|array',
+            'roles.*' => 'exists:roles,id'
         ], [
             'name.required' => 'Escriba un nombre',
             'name.min' => 'El nombre es demasiado corto',
@@ -303,19 +310,33 @@ class AdminController extends Controller
             'email.required' => 'Escriba un correo electrónico',
             'email.email' => 'La dirección de correo electrónico no es válida',
             'email.max' => 'La dirección de correo electrónico es demasiado larga',
-            'email.unique' => 'El correo electrónico ya está en uso'
+            'email.unique' => 'El correo electrónico ya está en uso',
+            'state.required' => 'Seleccione un estado',
+            'roles.required' => 'Seleccione un rol',
+            'roles.array' => 'El rol debe ser un array',
+            'roles.*' => 'Rol inválido'
         ]);
 
-        $admin->update($request->all());
+        // Actualizar datos del admin
+        $admin->update($request->only(['name', 'username', 'email', 'state']));
+
+        // Obtener nombres de roles por sus IDs
+        $roleNames = Role::whereIn('id', $request->roles)->pluck('name')->toArray();
+
+        // Asignar múltiples roles
+        $admin->syncRoles($roleNames);
 
         session()->flash('success', 'Los datos del administrador fueron actualizados con éxito!');
         return redirect()->route('users.edit-admin', $admin);
     }
 
+
    
     public function createAdminForm(){
+        $roles = Role::all();
         $data = [
-            'pageTitle' => 'Crear Administrador'
+            'pageTitle' => 'Crear Administrador',
+            'roles' => $roles
         ];
         return view('admin.back.pages.users.create-admin-form', $data);
     }
@@ -326,6 +347,8 @@ class AdminController extends Controller
             'username' =>'required|min:2|max:44|unique:admins',
             'email' =>'required|email|max:149|unique:admins',
             'state' =>'required|in:0,1',
+            'roles' => 'required|array',
+            'roles.*' => 'exists:roles,id',
             'new_password'=>'required|min:5|max:45|required_with:new_password_confirmation|
             same:new_password_confirmation',
             'new_password_confirmation'=>'required'     
@@ -348,15 +371,25 @@ class AdminController extends Controller
             'new_password_confirmation.required'=>'Se requiere la confirmación de la nueva contraseña',
             'state.required' => 'Seleccione un estado',
             '0.in'=>'El estado no es válido',
-            '1.in'=>'El estado no es válido'
-
+            '1.in'=>'El estado no es válido',
+            'roles.required' => 'Seleccione un rol',
+            'roles.array' => 'El rol debe ser un array',
+            'roles.*' => 'Rol inválido'
         ]);
+
         $data = $request->all();
         $data['password'] = bcrypt($data['new_password']);
+        $admin = Admin::create($data);
 
-        if(Admin::create($data)){
+        if($admin){
+            // Obtener nombres de roles por sus IDs
+            $roleNames = Role::whereIn('id', $request->roles)->pluck('name')->toArray();
+
+            // Asignar múltiples roles
+            $admin->syncRoles($roleNames);
+
            session()->flash('success', 'El administrador ha sido creado con éxito!');
-        return redirect()->route('users'); 
+            return redirect()->route('users'); 
         }else{
             session()->flash('error', 'Hubo un error al crear el administrador!');
             return redirect()->route('users.create-admin');

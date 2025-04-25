@@ -170,4 +170,41 @@
 		<script src="/extra-assets/ijaboCropTool/ijaboCropTool.min.js"></script>
         @stack('scripts')
 	</body>
+	<footer class="bg-light text-dark mt-5 pt-4 border-top">
+		<div class="container">
+			<div class="row">
+	
+				<!-- Descripción del sistema -->
+				<div class="col-md-4 mb-3">
+					<h5 class="text-uppercase fw-bold">Redeno</h5>
+					<p class="small">
+						Plataforma web para el registro y seguimiento de novedades de instalación y reparación en tiempo real. Optimiza la comunicación entre técnicos y supervisores.
+					</p>
+				</div>
+	
+				<!-- Enlaces rápidos -->
+				<div class="col-md-4 mb-3">
+					<h6 class="fw-semibold">Enlaces rápidos</h6>
+					<ul class="list-unstyled">
+						<li><a href="{{ route('home') }}" class="text-dark text-decoration-none">Inicio</a></li>
+						<li><a href="{{ route('reports') }}" class="text-dark text-decoration-none">Mis Reportes</a></li>
+						<li><a  class="text-dark text-decoration-none">Preguntas Frecuentes</a></li>
+						<li><a  class="text-dark text-decoration-none">Términos y condiciones</a></li>
+					</ul>
+				</div>
+	
+				<!-- Contacto o redes sociales -->
+				<div class="col-md-4 mb-3">
+					<h6 class="fw-semibold">Contacto</h6>
+					<p class="small mb-1">Soporte técnico</p>
+					<p class="small mb-1"><i class="dw dw-envelope me-2"></i> soporte@redeno.com</p>
+					<p class="small"><i class="dw dw-phone me-2"></i> +57 310 000 0000</p>
+				</div>
+			</div>
+	
+			<div class="text-center py-3 border-top small">
+				© {{ date('Y') }} Redeno. Todos los derechos reservados.
+			</div>
+		</div>
+	</footer>
 </html>

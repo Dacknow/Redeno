@@ -26,6 +26,9 @@ class DatabaseSeeder extends Seeder
     $this->call([
         SubdomainSeeder::class, // Llama al seeder de subdominios
     ]);
+    $this->call([
+        RoleSeeder::class, // Llama al seeder de roles
+    ]);
     
 }
 }
