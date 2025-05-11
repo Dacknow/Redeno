@@ -11,7 +11,7 @@
                         <h4 class="text-dark h4">Editar Técnico</h4>
                     </div>
                     <div class="pull-right">
-                        <a href="{{ route('users') }}?tab=technicians"><i class="icon dw dw-left-arrow2"></i></a>
+                        <a href="{{ route('users.index') }}?tab=technicians"><i class="icon dw dw-left-arrow2"></i></a>
                     </div>
                 </div>
 
@@ -76,7 +76,7 @@
                         </div>                                                    
                     </div>                                                    
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Actualizar Cambios</button>
+                        <button type="submit" class="btn btn-primary btn-sm">Actualizar Cambios</button>
                     </div>
                 </form>
                 

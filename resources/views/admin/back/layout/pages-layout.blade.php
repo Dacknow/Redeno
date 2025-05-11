@@ -135,7 +135,7 @@
 								</a>
 							</li>
 						@endif
-						@if(auth('admin')->user()->can('templates-page'))
+						@if(auth('admin')->user()->can('templates.index'))
 							<li>
 								<a href="{{route('templates-page')}}" class="dropdown-toggle no-arrow {{Route::is('templates-page') ? 'active' : ''}}">
 									<span class="micon fa fa-clone"></span>
@@ -143,18 +143,18 @@
 								</a>
 							</li>
 						@endif
-						@if(auth('admin')->user()->can('users'))
+						@if(auth('admin')->user()->can('users.index'))
 							<li>
-								<a href="{{route('users')}}" class="dropdown-toggle no-arrow {{Route::is('users') ? 'active' : ''}}">
+								<a href="{{route('users.index')}}" class="dropdown-toggle no-arrow {{Route::is('users.*') ? 'active' : ''}}">
 									<span class="micon fa fa-users"></span>
 									<span class="mtext">Usuarios</span>
 								</a>
 							</li>
 						@endif
 						
-						@if(auth('admin')->user()->can('roles'))
+						@if(auth('admin')->user()->can('roles.index'))
 							<li>
-								<a href="roles.html" class="dropdown-toggle no-arrow">
+								<a href="{{route('roles.index')}}" class="dropdown-toggle no-arrow {{Route::is('roles.*') ? 'active' : ''}}">
 									<span class="micon bi bi-person-badge"></span>
 									<span class="mtext">Roles</span>
 								</a>

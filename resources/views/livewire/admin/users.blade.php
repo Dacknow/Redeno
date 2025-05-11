@@ -29,9 +29,11 @@
                                     <div class="pull-left">
                                         <h4 class="text-dark h4">Listado de Administradores</h4>
                                     </div>
-                                    <div class="pull-right">
-                                        <a href="{{ route('users.create-admin') }}"><i class="icon dw dw-add-user"></i></a>
-                                    </div>
+                                    @if(auth('admin')->user()->can('users.create-admin'))
+                                        <div class="pull-right">
+                                            <a href="{{ route('users.create-admin') }}"><i class="icon dw dw-add-user"></i></a>
+                                        </div>
+                                    @endif
                                     
                                     <input wire:model.live="searchAdmin" id="search" type="text" class="form-control mb-3" placeholder="Ingrese el nombre o el correo de un usuario">
                                     @if($admins->count())
@@ -59,7 +61,11 @@
                                                     <td>{{ $admin->name }}</td>
                                                     <td>{{ $admin->email }}</td>
                                                     <td>{{ $admin->username }}</td>
-                                                    <td><a href="{{route('users.edit-admin', $admin)}}" class="btn btn-info btn-sm">Editar</a></td>
+                                                    <td>
+                                                        @if(auth('admin')->user()->can('users.edit-admin'))
+                                                            <a href="{{route('users.edit-admin', $admin)}}" class="btn btn-info btn-sm">Editar</a>
+                                                        @endif
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -114,7 +120,12 @@
                                                     <td>{{ $technician->identification }}</td>
                                                     <td>{{ $technician->celphone }}</td>
                                                     <td>{{ $technician->state == 1? 'Activo' : 'Inactivo' }}</td>
-                                                    <td><a href="{{route('users.edit-technician', $technician)}}" class="btn btn-info btn-sm">Editar</a></td>
+                                                    <td>
+                                                        @if(auth('admin')->user()->can('users.edit-technician'))
+                                                            <a href="{{route('users.edit-technician', $technician)}}" class="btn btn-info btn-sm">Editar</a>
+                                                        @endif
+                                                    </td>
+                                                    
                                                 </tr>
                                             @endforeach
                                         </tbody>

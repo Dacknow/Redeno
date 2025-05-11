@@ -6,7 +6,7 @@
         <div class="min-height-200px ">	
             <div class="pd-20 card-box ">
                 <div class="pull-right">
-                    <a href="{{ route('users') }}?tab=admins"><i class="icon dw dw-left-arrow2"></i></a>
+                    <a href="{{ route('users.index') }}?tab=admins"><i class="icon dw dw-left-arrow2"></i></a>
                 </div>
                 <div class="clearfix">
                     <div class="pull-left">
@@ -99,7 +99,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <button type="submit" class="btn btn-primary">Crear Administrador</button>
+                                <button type="submit" class="btn btn-primary btn-sm">Crear Administrador</button>
                             </div>
                         </div>
                     </div>

@@ -35,7 +35,7 @@ class RoleSeeder extends Seeder
         // Crear permisos y asignarlos a roles
         Permission::create(['name' => 'dashboard', 'guard_name' => 'admin'])->syncRoles([$role1, $role2, $role3, $role4, $role5, $role6]);
 
-        Permission::create(['name' => 'users', 'guard_name' => 'admin'])->syncRoles([$role1, $role2]);       
+        Permission::create(['name' => 'users.index', 'guard_name' => 'admin'])->syncRoles([$role1, $role2]);       
         Permission::create(['name' => 'users.create-technician', 'guard_name' => 'admin'])->syncRoles([$role1, $role2]); 
         Permission::create(['name' => 'users.edit-technician', 'guard_name' => 'admin'])->syncRoles([$role1, $role2]); 
         Permission::create(['name' => 'users.destroy-technician', 'guard_name' => 'admin'])->syncRoles([$role1, $role2]);        
@@ -43,11 +43,14 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'users.edit-admin', 'guard_name' => 'admin'])->syncRoles([$role1, $role2]); 
         Permission::create(['name' => 'users.destroy-admin', 'guard_name' => 'admin'])->syncRoles([$role1, $role2]); 
 
-        Permission::create(['name' => 'templates-page', 'guard_name' => 'admin'])->syncRoles([$role1, $role2]); 
+        Permission::create(['name' => 'templates.index', 'guard_name' => 'admin'])->syncRoles([$role1, $role2]); 
+        Permission::create(['name' => 'templates.create', 'guard_name' => 'admin'])->syncRoles([$role1, $role2]); 
+        Permission::create(['name' => 'templates.edit', 'guard_name' => 'admin'])->syncRoles([$role1, $role2]); 
+        Permission::create(['name' => 'templates.destroy', 'guard_name' => 'admin'])->syncRoles([$role1, $role2]); 
 
         Permission::create(['name' => 'manage-reports', 'guard_name' => 'admin'])->syncRoles([$role1, $role2, $role3, $role4, $role5, $role6]); 
 
-        Permission::create(['name' => 'roles', 'guard_name' => 'admin'])->syncRoles([$role1, $role2]);   
+        Permission::create(['name' => 'roles.index', 'guard_name' => 'admin'])->syncRoles([$role1, $role2]);   
         Permission::create(['name' => 'roles.create', 'guard_name' => 'admin'])->syncRoles([$role1, $role2]); 
         Permission::create(['name' => 'roles.edit', 'guard_name' => 'admin'])->syncRoles([$role1, $role2]); 
         Permission::create(['name' => 'roles.destroy', 'guard_name' => 'admin'])->syncRoles([$role1, $role2]);

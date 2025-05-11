@@ -24,9 +24,11 @@
                                     <div class="pull-left">
                                         <h4 class="text-dark h4">Tipos de Novedades</h4>
                                     </div>
-                                    <div class="pull-right">
-                                        <a wire:click="create_novelty_type()"><i class="icon dw dw-add"></i></a>
-                                    </div>
+                                    @if(auth('admin')->user()->can('templates.create'))
+                                        <div class="pull-right">
+                                            <a wire:click="create_novelty_type()"><i class="icon dw dw-add"></i></a>
+                                        </div>
+                                    @endif
                                     <input wire:model.live="searchNoveltyType" type="text" class="form-control mb-3" placeholder="Buscar...">
     
                                     @if($noveltyTypes->count())
@@ -43,13 +45,17 @@
                                                     <tr>
                                                         <td>{{ $noveltyType->id }}</td>
                                                         <td>{{ $noveltyType->subdomain }}</td>
-                                                        <td>                                                            
-                                                            <a class="m-1" href="javascript:;" wire:click="editNoveltyType({{ $noveltyType->id }})">
-                                                                <i class="icon dw dw-edit2"></i>
-                                                            </a>
-                                                            <a wire:click="confirmDeleteNovelty({{ $noveltyType->id }}, '{{ $noveltyType->subdomain }}')" href="javascript:;" >
-                                                                <i class="icon dw dw-delete-3"></i>
-                                                            </a>                                                                                                            
+                                                        <td>
+                                                            @if(auth('admin')->user()->can('templates.edit'))                                                            
+                                                                <a class="m-1" href="javascript:;" wire:click="editNoveltyType({{ $noveltyType->id }})">
+                                                                    <i class="icon dw dw-edit2"></i>
+                                                                </a>
+                                                            @endif
+                                                            @if(auth('admin')->user()->can('templates.destroy'))
+                                                                <a wire:click="confirmDeleteNovelty({{ $noveltyType->id }}, '{{ $noveltyType->subdomain }}')" href="javascript:;" >
+                                                                    <i class="icon dw dw-delete-3"></i>
+                                                                </a>
+                                                            @endif                                                                                                            
                                                         </td>                                                       
                                                     </tr>
                                                 @endforeach
@@ -68,9 +74,11 @@
                                     <div class="pull-left">
                                         <h4 class="text-dark h4">Datos</h4>
                                     </div>
-                                    <div class="pull-right">
-                                        <a wire:click="create_data()"><i class="icon dw dw-add"></i></a>
-                                    </div>
+                                    @if(auth('admin')->user()->can('templates.create'))
+                                        <div class="pull-right">
+                                            <a wire:click="create_data()"><i class="icon dw dw-add"></i></a>
+                                        </div>
+                                    @endif
                                     <input wire:model.live="searchData" type="text" class="form-control mb-3" placeholder="Buscar...">
     
                                     @if($data->count())
@@ -88,12 +96,16 @@
                                                         <td>{{ $item->id }}</td>
                                                         <td>{{ $item->subdomain }}</td>
                                                         <td>
-                                                            <a class="m-1" href="javascript:;" wire:click="edit_data({{$item->id}})">
-                                                                <i class="icon dw dw-edit2"></i>
-                                                            </a>
-                                                            <a class="m-1" href="javascript:;" wire:click="confirmDeleteData({{ $item->id }}, '{{ $item->subdomain }}')">
-                                                                <i class="icon dw dw-delete-3"></i>
-                                                            </a>
+                                                            @if(auth('admin')->user()->can('templates.edit'))
+                                                                <a class="m-1" href="javascript:;" wire:click="edit_data({{$item->id}})">
+                                                                    <i class="icon dw dw-edit2"></i>
+                                                                </a>
+                                                            @endif
+                                                            @if(auth('admin')->user()->can('templates.destroy'))
+                                                                <a class="m-1" href="javascript:;" wire:click="confirmDeleteData({{ $item->id }}, '{{ $item->subdomain }}')">
+                                                                    <i class="icon dw dw-delete-3"></i>
+                                                                </a>
+                                                            @endif
                                                         </td>
                                                     </tr>
                                                 @endforeach
