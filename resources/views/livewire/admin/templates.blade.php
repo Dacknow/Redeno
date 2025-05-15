@@ -149,6 +149,21 @@
                                                 </div>
                                             @endforeach
                                         </div>
+                                        <!-- Selección de roles asociados con checkboxes -->
+                                        <label>Asociar Roles:</label>
+                                        <div class="form-group">
+                                            @foreach($roles as $item)
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" 
+                                                        wire:model="selectedRoles" 
+                                                        value="{{ $item->id }}" 
+                                                        id="data_{{ $item->id }}">
+                                                    <label class="form-check-label" for="data_{{ $item->id }}">
+                                                        {{ $item->name }}
+                                                    </label>
+                                                </div>
+                                            @endforeach
+                                        </div>
 
                                         <button wire:click="updateNoveltyType" class="btn btn-success mt-3">Guardar</button>
                                     </div>
@@ -185,10 +200,31 @@
                                                 </label>
                                             </div>
                                             @endforeach
-                                            <div class="form-group mt-3">
-                                                <button wire:click="store_novelty_type()" class="btn btn-success mt-3" >Crear Tipo de Novedad</button>
-                                            </div>
+                                            @error('selectedData')
+                                                <span class="text-danger" role="alert">{{$message}}</span>
+                                            @enderror                                            
                                         </div>
+                                        <!-- Selección de roles asociados con checkboxes -->
+                                        <label>Asociar Roles:</label>
+                                        <div class="form-group">
+                                            @foreach($roles as $item)
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" 
+                                                        wire:model="selectedRoles" 
+                                                        value="{{ $item->id }}" 
+                                                        id="data_{{ $item->id }}">
+                                                    <label class="form-check-label" for="data_{{ $item->id }}">
+                                                        {{ $item->name }}
+                                                    </label>
+                                                </div>
+                                            @endforeach
+                                            @error('selectedRoles')
+                                                <span class="text-danger" role="alert">{{$message}}</span>
+                                            @enderror
+                                        </div>
+                                        <div class="form-group mt-3">
+                                            <button wire:click="store_novelty_type()" class="btn btn-success mt-3" >Crear Tipo de Novedad</button>
+                                        </div>                                       
                                     </div>
                                 </div>
                             </div>

@@ -14,9 +14,12 @@
                     {{$email}}
                 </p>
                 {{-- Aqui va el rol del admin --}}
-                <p class="text-center text-muted font-14">
-                    <strong>{{ $state ? 'Coordinador' : 'Inactivo' }}</strong>
-                </p>
+                @if($admin && $admin->roles->isNotEmpty())
+                    <p class="text-center text-muted font-14">
+                        <strong>{{ $admin->getRoleNames()->first() }}</strong>
+                    </p> 
+                @endif
+                
                 <p class="text-center text-muted font-14">
                     Estado: <strong>{{ $state ? 'Activo' : 'Inactivo' }}</strong>
                 </p>

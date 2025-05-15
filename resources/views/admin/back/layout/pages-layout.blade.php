@@ -131,7 +131,7 @@
 							<li>
 								<a href="{{route('manage-reports')}}" class="dropdown-toggle no-arrow {{Route::is('manage-reports') ? 'active' : ''}}">
 									<span class="micon fa fa-warning"></span>
-									<span class="mtext">Reportes</span>
+									<span class="mtext">Mis Reportes</span>
 								</a>
 							</li>
 						@endif
@@ -202,12 +202,12 @@
         @stack('scripts')
 	</body>
 	<footer class="bg-light text-dark mt-5 pt-4 border-top">
-		<div class="container">
+		<div class="container text-center">
 			<div class="row">
 	
 				<!-- Descripción del sistema -->
 				<div class="col-md-4 mb-3">
-					<h5 class="text-uppercase fw-bold">Redeno</h5>
+					<h5 class="fw-bold">Redeno</h5>
 					<p class="small">
 						Plataforma web para el registro y seguimiento de novedades de instalación y reparación en tiempo real. Optimiza la comunicación entre técnicos y supervisores.
 					</p>

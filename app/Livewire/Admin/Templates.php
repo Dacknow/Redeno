@@ -7,7 +7,9 @@ use App\Models\DataNoveltyType;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
-use App\Models\Report; 
+use App\Models\Report;
+use App\Models\ReportTypeRole;
+use Spatie\Permission\Models\Role;
 
 class Templates extends Component
 {
@@ -19,7 +21,8 @@ class Templates extends Component
     protected $queryString = ['tab'=>['keep'=>true]];
     protected $paginationTheme="bootstrap";
 
-    public $editingNoveltyTypeId, $editingNoveltyTypeName, $selectedData = [];
+    public $editingNoveltyTypeId, $editingNoveltyTypeName, $selectedData = [],
+    $selectedRoles = [];
     public $dataModal;
 
     public $editingDataId, $editingDataName;
@@ -55,10 +58,12 @@ class Templates extends Component
         $this->validate([
             'newNoveltyTypeName' => 'required|max:100',
             'selectedData' => 'nullable|array',
+            'selectedRoles' => 'nullable|array',
         ], [
             'newNoveltyTypeName.required' => 'El nombre del tipo de novedad es obligatorio.',
             'newNoveltyTypeName.max' => 'El nombre no puede exceder los 100 caracteres.',
             'selectedData.array' => 'Los datos seleccionados deben ser un array válido.',
+            'selectedRoles.array' => 'Los roles seleccionados deben ser un array válido.',
         ]);
 
         try {
@@ -69,14 +74,25 @@ class Templates extends Component
                 ]);
 
                 if (!empty($this->selectedData)) {
-                    $dataToInsert = collect($this->selectedData)->map(function ($dataId) use ($noveltyType) {
+                    $dataToInsert = collect($this->selectedData)->map(function ($data_id) use ($noveltyType) {
                         return [
                             'novelty_type_id' => $noveltyType->id,
-                            'data_id' => $dataId,
+                            'data_id' => $data_id,
                         ];
                     })->toArray();
 
                     DataNoveltyType::insert($dataToInsert); // Inserción masiva para mejor rendimiento
+                }
+                
+                if (!empty($this->selectedRoles)) {
+                    $dataToInsert = collect($this->selectedRoles)->map(function ($role_id) use ($noveltyType) {
+                        return [
+                            'novelty_type_id' => $noveltyType->id,
+                            'role_id' => $role_id,
+                        ];
+                    })->toArray();
+
+                    ReportTypeRole::insert($dataToInsert); // Inserción masiva para mejor rendimiento
                 }
 
                 // Emitir evento de éxito
@@ -84,7 +100,7 @@ class Templates extends Component
                 $this->dispatch('hide-modal');
 
                 // Limpiar variables
-                $this->reset(['newNoveltyTypeName', 'selectedData']);
+                $this->reset(['newNoveltyTypeName', 'selectedData', 'selectedRoles']);
                 $noveltyType->refresh();
             });
         } catch (\Exception $e) {
@@ -101,6 +117,9 @@ class Templates extends Component
 
         // Cargar datos asociados
         $this->selectedData = DataNoveltyType::where('novelty_type_id', $id)->pluck('data_id')->toArray();
+        
+        // Cargar roles asociados
+        $this->selectedRoles = ReportTypeRole::where('novelty_type_id', $id)->pluck('role_id')->toArray();
 
         $this->dispatch('show-edit-novelty-modal');
         
@@ -110,11 +129,13 @@ class Templates extends Component
         // Validación de los datos
         $validatedData = $this->validate([
             'editingNoveltyTypeName' => 'required|max:100',
-            'selectedData' => 'nullable|array'
+            'selectedData' => 'nullable|array',
+            'selectedRoles' => 'nullable|array',
         ], [
             'editingNoveltyTypeName.required' => 'El nombre de tipo de novedad es requerido',
             'editingNoveltyTypeName.max' => 'El nombre de tipo de novedad no puede exceder los 100 caracteres',
             'selectedData.array' => 'Los datos seleccionados deben ser un array',
+            'selectedRoles.array' => 'Los datos seleccionados deben ser un array',
         ]);
 
         try {
@@ -136,13 +157,24 @@ class Templates extends Component
                     ]);
                 }
             }
+            // Actualizar relaciones en ReportTypeRole
+            ReportTypeRole::where('novelty_type_id', $this->editingNoveltyTypeId)->delete();
+
+            if (!empty($this->selectedRoles)) {
+                foreach ($this->selectedRoles as $role_id) {
+                    ReportTypeRole::create([
+                        'novelty_type_id' => $this->editingNoveltyTypeId,
+                        'role_id' => $role_id,
+                    ]);
+                }
+            }
 
             DB::commit(); // Confirmar la transacción
 
             // Emitir eventos de éxito
             $this->dispatch('success', '¡Tipo de novedad actualizado con éxito!');
             $this->dispatch('hide-modal');
-            $this->reset(['editingNoveltyTypeId', 'editingNoveltyTypeName', 'selectedData']);
+            $this->reset(['editingNoveltyTypeId', 'editingNoveltyTypeName', 'selectedData', 'selectedRoles']);
         } catch (\Exception $e) {
             DB::rollBack(); // Revertir cambios si hay un error 
             
@@ -313,9 +345,12 @@ class Templates extends Component
             ->onEachSide(1)
             ->withQueryString();
 
+        $roles = Role::all();
+
         return view('livewire.admin.templates', [
             'noveltyTypes' => $noveltyTypes,
-            'data' => $data
+            'data' => $data,
+            'roles' => $roles
         ]);
     }
 
