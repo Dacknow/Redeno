@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Livewire\WithFileUploads; // Importante para manejar archivos en Livewire
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Carbon;
+use App\Models\HistoryReport;
 
 class ManageReports extends Component
 {
@@ -82,9 +83,17 @@ class ManageReports extends Component
         $pending = getSubdomainId('Pendiente');
         $inProgress = getSubdomainId('En Gestión');
         $escalated = getSubdomainId('Escalado');
-    
+
         if ($report->state_id === $pending) {
             $report->update(['state_id' => $inProgress]);
+
+            // Registrar acción del administrador
+            HistoryReport::logAction(
+                $report->id,
+                $this->admin->id,
+                'Cambió estado a En Gestión'
+            );
+
             $this->dispatch('success', '!Cambió de estado a En Gestión!');
             $this->resetSelectedReport();
         } elseif (in_array($report->state_id, [$inProgress, $escalated])) {
@@ -92,6 +101,7 @@ class ManageReports extends Component
             $this->dispatch('show-modal-report-response');
         }
     }
+
     
     public function sendResponse()
     {
@@ -125,6 +135,10 @@ class ManageReports extends Component
             'state_id' => $this->reportStateSelected,
             'completation_time' => now(),
         ]);
+
+            // Registrar historial
+        $action = "Respuesta enviada: '{$this->adminResponse}' - Estado actualizado a '{$state->subdomain}'";
+        HistoryReport::logAction($report->id, $this->admin->id, $action);
     
         $this->dispatch('$refresh'); // Actualizar la lista de reportes
         $this->resetForm();

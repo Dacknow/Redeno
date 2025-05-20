@@ -161,6 +161,16 @@
 							</li>
 						@endif
 
+						
+						@if(auth('admin')->user()->can('history'))
+							<li>
+								<a href="{{route('history')}}" class="dropdown-toggle no-arrow {{Route::is('history') ? 'active' : ''}}">
+									<span class="micon bi bi-folder2-open"></span>
+									<span class="mtext">Historial de Reportes</span>
+								</a>
+							</li>
+						@endif
+						
 						<li>
 							<div class="dropdown-divider"></div>
 						</li>

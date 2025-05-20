@@ -56,5 +56,7 @@ Route::middleware('auth', 'preventBackHistory')->group(function () {
         Route::put('/roles/update/{role}', 'update')->name('roles.update');
         Route::delete('/roles/destroy/{role}', 'destroy')->middleware('permission:roles.destroy,admin')->name('roles.destroy');
 
-    });    
+    });
+    
+    Route::get('/history', [ReportController::class, 'historyPage'])->middleware('permission:history,admin')->name('history');
 });

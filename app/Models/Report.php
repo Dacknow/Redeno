@@ -72,4 +72,9 @@ class Report extends Model
         return $this->hasMany(Image::class, 'report_id');
     }
 
+    public function histories()
+    {
+        return $this->hasMany(HistoryReport::class);
+    }
+
 }

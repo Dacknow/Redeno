@@ -21,13 +21,15 @@ class ReportController extends Controller
             'title' => 'Administrar Reportes'
         ];
         return view('admin.back.pages.manage-reports', $data);
-    } 
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    }
+     
+   
+    public function historyPage()
     {
-        //
+        $data = [
+            'title' => 'Historial de Reportes'
+        ];
+        return view('admin.back.pages.history', $data);
     }
 
     /**
